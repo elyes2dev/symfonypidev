@@ -18,15 +18,9 @@ class Notification
     #[Assert\NotBlank]
     private ?string $text;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="iduser", referencedColumnName="id")
-     * })
-     */
-    private $iduser;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
+    private ?User $iduser;
 
     public function getId(): ?int
     {

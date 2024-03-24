@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass:StadiumRepository::class)]
 class Stadium
 {
+    #[ORM\Id]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $reference;
@@ -39,18 +40,22 @@ class Stadium
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $maintenance;
-
-    #[ORM\ManyToOne(targetEntity: Club::class,inversedBy: 'stadiums')]
+    
+    #[ORM\ManyToOne(targetEntity: Club::class, inversedBy: 'stadiums')]
+    #[ORM\JoinColumn(name: "idClub", referencedColumnName: "id")]
     private ?Club $idclub;
 
-    #[ORM\OneToMany(mappedBy: 'refStadium', targetEntity: Reservation::class)]
+    #[ORM\OneToMany(mappedBy: 'refstadium', targetEntity: Reservation::class)]
     private Collection $reservations;
 
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'refstadium')]
+    #[ORM\JoinTable(name:"imagestadium")]
+    #[ORM\JoinColumn(name:"refStadium", referencedColumnName:"reference")]
+    #[ORM\InverseJoinColumn(name:"idImage", referencedColumnName:"id")]
     private Collection $idimage;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'refstadium')]
-    private Collection $iduser ;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'refstadium')]
+    private Collection $iduser;
     
 
     /**
@@ -58,8 +63,8 @@ class Stadium
      */
     public function __construct()
     {
-        $this->idimage = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->iduser = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idimage = new ArrayCollection();
+        $this->iduser = new ArrayCollection();
         $this->reservations = new ArrayCollection();
     }
 
@@ -221,6 +226,13 @@ class Stadium
                 $reservation->setRefStadium(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setIdimage(string $idimage): static
+    {
+        $this->idimage = $idimage;
 
         return $this;
     }

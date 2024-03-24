@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ClaimRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Date;
@@ -21,7 +22,7 @@ class Claim
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $date;
+    private ?DateTime $date;
     
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -47,16 +48,17 @@ class Claim
     #[Assert\NotBlank]
     private ?string $response;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"closureDate")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $closuredate;
+    private ?DateTime $closuredate;
 
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'claims')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'claims')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
     private ?User $iduser;
 
-    
-    #[ORM\ManyToOne(targetEntity: Club::class,inversedBy:'claims')]
-    private ?Club $idclub =null;
+    #[ORM\ManyToOne(targetEntity: Club::class, inversedBy: 'claims')]
+    #[ORM\JoinColumn(name: "idClub", referencedColumnName: "id")]
+    private ?Club $idclub;
 
     public function getId(): ?int
     {

@@ -20,9 +20,10 @@ class Payment
     #[Assert\NotBlank]
     private ?string $type;
 
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'payments')]
+    
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
     private ?User $iduser;
-
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'idpayment')]
     private Collection $idevent;
@@ -41,10 +42,10 @@ class Payment
      */
     public function __construct()
     {
-        $this->idevent = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idorder = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idreservation = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idsubscription = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idevent = new ArrayCollection();
+        $this->idorder = new ArrayCollection();
+        $this->idreservation = new ArrayCollection();
+        $this->idsubscription = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +181,34 @@ class Payment
         if ($this->idsubscription->removeElement($idsubscription)) {
             $idsubscription->removeIdpayment($this);
         }
+
+        return $this;
+    }
+
+    public function setIdevent(string $idevent): static
+    {
+        $this->idevent = $idevent;
+
+        return $this;
+    }
+
+    public function setIdorder(string $idorder): static
+    {
+        $this->idorder = $idorder;
+
+        return $this;
+    }
+
+    public function setIdreservation(string $idreservation): static
+    {
+        $this->idreservation = $idreservation;
+
+        return $this;
+    }
+
+    public function setIdsubscription(string $idsubscription): static
+    {
+        $this->idsubscription = $idsubscription;
 
         return $this;
     }

@@ -29,7 +29,7 @@ class Offer
     #[Assert\NotBlank]
     private ?string $text;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"nbrClub")]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $nbrclub;
@@ -103,7 +103,8 @@ class Offer
         return $this->subscriptions;
     }
 
-    public function addSubscription(Offer $subscription): static
+
+    public function addSubscription(Subscription $subscription): static
     {
         if (!$this->subscriptions->contains($subscription)) {
             $this->subscriptions->add($subscription);
@@ -113,7 +114,7 @@ class Offer
         return $this;
     }
 
-    public function removeSubscription(Offer $subscription): static
+    public function removeSubscription(Subscription $subscription): static
     {
         if ($this->subscriptions->removeElement($subscription)) {
             // set the owning side to null (unless already changed)

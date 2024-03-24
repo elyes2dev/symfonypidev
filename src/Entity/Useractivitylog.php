@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserActivityLogRepository;
+use DateTime;
 use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
@@ -16,14 +17,16 @@ class Useractivitylog
     #[ORM\Column]
     private ?int $logid;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"loginTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $logintimestamp;
+    private ?DateTime $logintimestamp;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"loginSuccess")]
     private ?bool $loginsuccess;
 
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'activities')]
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'activities')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
     private ?User $userid;
 
     public function getLogid(): ?int

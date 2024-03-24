@@ -8,9 +8,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ClubRepository;
 use DateTime;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\TimeType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use SebastianBergmann\Timer\Timer;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Validator\Constraints\Time;
+use Symfony\Component\Validator\Constraints\Timezone;
 
 #[ORM\Entity(repositoryClass:ClubRepository::class)]
 class Club
@@ -32,15 +36,15 @@ class Club
     #[Assert\NotBlank]
     private ?string $city;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"startTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $starttime;
+    private ?DateTime $starttime;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"endTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $endtime;
+    private ?DateTime $endtime;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"stadiumNbr")]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $stadiumnbr;
@@ -59,10 +63,14 @@ class Club
     #[Assert\Positive]
     private ?float $latitude;
 
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'clubs')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clubs')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
     private ?User $iduser;
 
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idclub')]
+    #[ORM\JoinTable(name:"imageclub")]
+    #[ORM\JoinColumn(name:"idImage", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idClub", referencedColumnName:"id")]
     private Collection $idimage;
 
     #[ORM\OneToMany(mappedBy: 'idclub', targetEntity: Claim::class)]

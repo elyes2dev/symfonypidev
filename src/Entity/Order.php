@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,12 +25,16 @@ class Order
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $date;
+    private ?DateTime $date;
 
-    #[ORM\ManyToOne(inversedBy:'orders')]
-    private ?Cart $idcart =null;
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(name: "idCart", referencedColumnName: "id")]
+    private ?User $idcart;
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idorder')]
+    #[ORM\JoinTable(name:"paymentorder")]
+    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idOrder", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**

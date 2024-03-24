@@ -24,23 +24,23 @@ class Event
     #[Assert\NotBlank]
     private ?string $name;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"dateDeb")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $datedeb;
+    private ?DateTime $datedeb;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"dateFin")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $datefin;
+    private ?DateTime $datefin;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"startTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $starttime;
+    private ?DateTime $starttime;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"endTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $endtime;
+    private ?DateTime $endtime;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"nbrParticipants")]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $nbrparticipants;
@@ -50,20 +50,27 @@ class Event
     #[Assert\Positive]
     private ?float $price;
 
-    #[ORM\ManyToOne(targetEntity: Club::class,inversedBy:'events')]
-    private ?Club $idclub =null;
-
+    #[ORM\ManyToOne(targetEntity: Club::class, inversedBy: 'events')]
+    #[ORM\JoinColumn(name: "idClub", referencedColumnName: "id")]
+    private ?Club $idclub;
     
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idevent')]
+    #[ORM\JoinTable(name:"imageevent")]
+    #[ORM\JoinColumn(name:"idImage", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idEvent", referencedColumnName:"id")]
     private Collection $idimage;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'idevent')]
-    private Collection $idplanner ;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: LikedEvent::class)]
+    private Collection $likedByUsers;
+
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'idParticipant')]
     private Collection $idplayer;
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idevent')]
+    #[ORM\JoinTable(name:"paymentevent")]
+    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idEvent", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**
@@ -71,10 +78,10 @@ class Event
      */
     public function __construct()
     {
-        $this->idimage = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idplanner = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idplayer = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idpayment = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idimage = new ArrayCollection();
+        $this->likedByUsers = new ArrayCollection();
+        $this->idplayer = new ArrayCollection();
+        $this->idpayment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,30 +212,6 @@ class Event
     /**
      * @return Collection<int, User>
      */
-    public function getIdplanner(): Collection
-    {
-        return $this->idplanner;
-    }
-
-    public function addIdplanner(User $idplanner): static
-    {
-        if (!$this->idplanner->contains($idplanner)) {
-            $this->idplanner->add($idplanner);
-        }
-
-        return $this;
-    }
-
-    public function removeIdplanner(User $idplanner): static
-    {
-        $this->idplanner->removeElement($idplanner);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
     public function getIdplayer(): Collection
     {
         return $this->idplayer;
@@ -273,5 +256,45 @@ class Event
 
         return $this;
     }
+
+    public function setIdimage(string $idimage): static
+    {
+        $this->idimage = $idimage;
+
+        return $this;
+    }
+
+    public function addLikedByUser(LikedEvent $likedEvent): self
+    {
+    if (!$this->likedByUsers->contains($likedEvent)) {
+        $this->likedByUsers[] = $likedEvent;
+        $likedEvent->setEvent($this);
+    }
+
+    return $this;
+    }
+
+    public function removeLikedByUser(LikedEvent $likedEvent): self
+    {
+    if ($this->likedByUsers->removeElement($likedEvent)) {
+        // set the owning side to null (unless already changed)
+        if ($likedEvent->getEvent() === $this) {
+            $likedEvent->setEvent(null);
+        }
+    }
+
+    return $this;
+    }
+
+    /**
+     * @return Collection<int, LikedEvent>
+     */
+    public function getLikedByUsers(): Collection
+    {
+        return $this->likedByUsers;
+    }
+
+
+    
 
 }

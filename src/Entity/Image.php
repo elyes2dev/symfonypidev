@@ -28,18 +28,17 @@ class Image
     #[Assert\NotBlank]
     private ?string $type;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'idproduct')]
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'idimage')]
     private Collection $idproduct;
 
     #[ORM\ManyToMany(targetEntity: Club::class, mappedBy: 'idimage')]
     private Collection $idclub;
-
     
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'idimage')]
-    private Collection $idevent ;
+    private Collection $idevent;
 
     #[ORM\ManyToMany(targetEntity: Stadium::class, mappedBy: 'idimage')]
-    private Collection $refstadium ;
+    private Collection $refstadium;
 
     /**
      * Constructor
@@ -197,6 +196,34 @@ class Image
         if ($this->refstadium->removeElement($refstadium)) {
             $refstadium->removeIdimage($this);
         }
+
+        return $this;
+    }
+
+    public function setIdproduct(string $idproduct): static
+    {
+        $this->idproduct = $idproduct;
+
+        return $this;
+    }
+
+    public function setIdclub(string $idclub): static
+    {
+        $this->idclub = $idclub;
+
+        return $this;
+    }
+
+    public function setIdevent(string $idevent): static
+    {
+        $this->idevent = $idevent;
+
+        return $this;
+    }
+
+    public function setRefstadium(string $refstadium): static
+    {
+        $this->refstadium = $refstadium;
 
         return $this;
     }

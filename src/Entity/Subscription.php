@@ -19,21 +19,27 @@ class Subscription
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"startDate")]
     #[Assert\NotBlank]
     private ?DateTimeInterface $startdate;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"endDate")]
     #[Assert\NotBlank]
     private ?DateTimeInterface $enddate;
 
-    #[ORM\ManyToOne(targetEntity: Offer::class,inversedBy:'subscriptions')]
-    private ?Offer $idoffer =null;
 
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'subscriptions')]
+    #[ORM\ManyToOne(targetEntity: Offer::class, inversedBy: 'offers')]
+    #[ORM\JoinColumn(name: "idOffer", referencedColumnName: "id")]
+    private ?Offer $idoffer;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'subscriptions')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
     private ?User $iduser;
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idsubscription')]
+    #[ORM\JoinTable(name:"paymentsubscription")]
+    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idSubscription", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**
@@ -41,7 +47,7 @@ class Subscription
      */
     public function __construct()
     {
-        $this->idpayment = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idpayment = new ArrayCollection();
     }
 
     public function getId(): ?int

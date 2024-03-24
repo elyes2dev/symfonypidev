@@ -33,15 +33,19 @@ class Product
     #[Assert\NotBlank]
     private ?string $type;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"quantityStock")]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $quantitystock;
 
-    #[ORM\ManyToMany(targetEntity: Cart::class, mappedBy: 'idproduct')]
-    private Collection $idcart ;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Composed::class)]
+    private Collection $composed;
 
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idproduct')]
+    #[ORM\JoinTable(name:"imageproduct")]
+    #[ORM\JoinColumn(name:"idImage", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idProduct", referencedColumnName:"id")]
     private Collection $idimage;
 
     /**
@@ -49,8 +53,9 @@ class Product
      */
     public function __construct()
     {
-        $this->idcart = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idimage = new \Doctrine\Common\Collections\ArrayCollection();
+        // $this->idcart = new ArrayCollection();
+        $this->idimage = new ArrayCollection();
+        $this->composed = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,32 +123,32 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Cart>
-     */
-    public function getIdcart(): Collection
-    {
-        return $this->idcart;
-    }
+    // /**
+    //  * @return Collection<int, Cart>
+    //  */
+    // public function getIdcart(): Collection
+    // {
+    //     return $this->idcart;
+    // }
 
-    public function addIdcart(Cart $idcart): static
-    {
-        if (!$this->idcart->contains($idcart)) {
-            $this->idcart->add($idcart);
-            $idcart->addIdproduct($this);
-        }
+    // public function addIdcart(Cart $idcart): static
+    // {
+    //     if (!$this->idcart->contains($idcart)) {
+    //         $this->idcart->add($idcart);
+    //         $idcart->addIdproduct($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeIdcart(Cart $idcart): static
-    {
-        if ($this->idcart->removeElement($idcart)) {
-            $idcart->removeIdproduct($this);
-        }
+    // public function removeIdcart(Cart $idcart): static
+    // {
+    //     if ($this->idcart->removeElement($idcart)) {
+    //         $idcart->removeIdproduct($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Image>
@@ -165,6 +170,36 @@ class Product
     public function removeIdimage(Image $idimage): static
     {
         $this->idimage->removeElement($idimage);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Composed>
+     */
+    public function getComposed(): Collection
+    {
+        return $this->composed;
+    }
+
+    public function addComposed(Composed $composed): static
+    {
+        if (!$this->composed->contains($composed)) {
+            $this->composed->add($composed);
+            $composed->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComposed(Composed $composed): static
+    {
+        if ($this->composed->removeElement($composed)) {
+            // set the owning side to null (unless already changed)
+            if ($composed->getProduct() === $this) {
+                $composed->setProduct(null);
+            }
+        }
 
         return $this;
     }

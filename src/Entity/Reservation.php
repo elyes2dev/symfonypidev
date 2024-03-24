@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use DateTimeInterface;
+use Doctrine\Migrations\Version\State;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass:ReservationRepository::class)]
@@ -20,28 +22,33 @@ class Reservation
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $date;
+    private ?DateTime $date;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"startTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $starttime;
+    private ?DateTime $starttime;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"endTime")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $endtime;
+    private ?DateTime $endtime;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $type;
 
 
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'reservations')]
-    private ?User $idplayer =null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
+    private ?User $idplayer;
 
-    #[ORM\ManyToOne(inversedBy:'reservations')]
-    private ?Stadium $refstadium =null;
+    #[ORM\ManyToOne(targetEntity: Stadium::class,inversedBy:'reservations')]
+    #[ORM\JoinColumn(name: 'refStadium', referencedColumnName: 'reference')]
+    private ?Stadium $refstadium;
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idreservation')]
+    #[ORM\JoinTable(name:"paymentreservation")]
+    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idreservation", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**
@@ -49,7 +56,7 @@ class Reservation
      */
     public function __construct()
     {
-        $this->idpayment = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idpayment = new ArrayCollection();
     }
 
     public function getId(): ?int

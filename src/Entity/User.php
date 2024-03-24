@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
@@ -18,22 +19,22 @@ class User
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,name:"firstName")]
     #[Assert\NotBlank]
     private ?string $firstname;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,name:"lastName")]
     #[Assert\NotBlank]
     private ?string $lastname;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"phoneNumber")]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $phonenumber;
     
-    #[ORM\Column]
+    #[ORM\Column(name:"birthDate")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $birthdate;
+    private ?DateTime $birthdate;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -59,9 +60,9 @@ class User
     #[Assert\NotBlank]
     private ?string $image;
 
-    #[ORM\Column]
+    #[ORM\Column(name:"creationDate")]
     #[Assert\NotBlank]
-    private ?DateTimeInterface $creationdate;
+    private ?DateTime $creationdate;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -82,32 +83,43 @@ class User
     #[ORM\OneToMany(mappedBy: 'idplayer', targetEntity: Reservation::class)]
     private Collection $reservations;
 
+    #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Notification::class)]
+    private Collection $notifications;
+
     #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Payment::class)]
     private Collection $payments;
 
-    #[ORM\ManyToMany(targetEntity: Stadium::class, mappedBy: 'iduser')]
+    #[ORM\ManyToMany(targetEntity: Stadium::class, inversedBy: 'iduser')]
+    #[ORM\JoinTable(name:"liked")]
+    #[ORM\JoinColumn(name:"idUser", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"refStadium", referencedColumnName:"reference")]
     private Collection $refstadium;
 
-    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'idplanner')]
-    private Collection $idevent;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: LikedEvent::class)]
+    private Collection $likedEvents;
+
 
     #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'idplayer')]
-    private Collection $idParticipant ;
+    #[ORM\JoinTable(name:"participation")]
+    #[ORM\JoinColumn(name:"idPlayer", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idEvent", referencedColumnName:"id")]
+    private Collection $idParticipant;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->refstadium = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idevent = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idParticipant = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->refstadium = new ArrayCollection();
+        $this->likedEvents = new ArrayCollection();
+        $this->idParticipant = new ArrayCollection();
         $this->clubs = new ArrayCollection();
         $this->claims = new ArrayCollection();
         $this->carts = new ArrayCollection();
         $this->activities = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,33 +293,6 @@ class User
     {
         if ($this->refstadium->removeElement($refstadium)) {
             $refstadium->removeIduser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Event>
-     */
-    public function getIdevent(): Collection
-    {
-        return $this->idevent;
-    }
-
-    public function addIdevent(Event $idevent): static
-    {
-        if (!$this->idevent->contains($idevent)) {
-            $this->idevent->add($idevent);
-            $idevent->addIdplanner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdevent(Event $idevent): static
-    {
-        if ($this->idevent->removeElement($idevent)) {
-            $idevent->removeIdplanner($this);
         }
 
         return $this;
@@ -516,5 +501,67 @@ class User
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setIduser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getIduser() === $this) {
+                $notification->setIduser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addLikedEvent(LikedEvent $likedEvent): self
+    {
+    if (!$this->likedEvents->contains($likedEvent)) {
+        $this->likedEvents[] = $likedEvent;
+        $likedEvent->setUser($this);
+    }
+
+    return $this;
+    }
+
+    public function removeLikedEvent(LikedEvent $likedEvent): self
+    {
+    if ($this->likedEvents->removeElement($likedEvent)) {
+        // set the owning side to null (unless already changed)
+        if ($likedEvent->getUser() === $this) {
+            $likedEvent->setUser(null);
+        }
+    }
+
+    return $this;
+    }
+
+    /**
+     * @return Collection<int, LikedEvent>
+     */
+    public function getLikedEvents(): Collection
+    {
+        return $this->likedEvents;
+    }
+
+
 
 }
