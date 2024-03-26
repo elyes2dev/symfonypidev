@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass:LikedEventRepository::class)]
 #[ORM\Table(name: "likedevent")]
-class LikedEvent
+class Likedevent
 {
 
     #[ORM\Id]
@@ -22,7 +22,6 @@ class LikedEvent
     private ?Event $event;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     private ?int $rating;
 
 

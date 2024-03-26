@@ -21,32 +21,25 @@ class Event
     private ?int $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $name;
 
-    #[ORM\Column(name:"dateDeb")]
-    #[Assert\NotBlank]
-    private ?DateTime $datedeb;
+    #[ORM\Column(name:"dateDeb",type:"date")]
+    private ?DateTimeInterface $datedeb;
 
-    #[ORM\Column(name:"dateFin")]
-    #[Assert\NotBlank]
-    private ?DateTime $datefin;
+    #[ORM\Column(name:"dateFin",type:"date")]
+    private ?DateTimeInterface $datefin;
 
-    #[ORM\Column(name:"startTime")]
-    #[Assert\NotBlank]
-    private ?DateTime $starttime;
+    #[ORM\Column(name:"startTime",type:"time")]
+    private ?DateTimeInterface $starttime;
 
-    #[ORM\Column(name:"endTime")]
-    #[Assert\NotBlank]
-    private ?DateTime $endtime;
+    #[ORM\Column(name:"endTime",type:"time")]
+    private ?DateTimeInterface $endtime;
 
     #[ORM\Column(name:"nbrParticipants")]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $nbrparticipants;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $price;
 
@@ -60,7 +53,7 @@ class Event
     #[ORM\InverseJoinColumn(name:"idEvent", referencedColumnName:"id")]
     private Collection $idimage;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: LikedEvent::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Likedevent::class)]
     private Collection $likedByUsers;
 
 

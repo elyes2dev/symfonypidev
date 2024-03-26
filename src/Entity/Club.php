@@ -25,41 +25,32 @@ class Club
     private ?int $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $name;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $governorate;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $city;
 
-    #[ORM\Column(name:"startTime")]
-    #[Assert\NotBlank]
+    #[ORM\Column(name:"startTime",type:"time")]
     private ?DateTime $starttime;
 
-    #[ORM\Column(name:"endTime")]
-    #[Assert\NotBlank]
+    #[ORM\Column(name:"endTime",type:"time")]
     private ?DateTime $endtime;
 
     #[ORM\Column(name:"stadiumNbr")]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $stadiumnbr;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $description;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $longitude;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $latitude;
 

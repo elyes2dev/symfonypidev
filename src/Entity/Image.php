@@ -17,15 +17,12 @@ class Image
     private ?int $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $name;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $url;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $type;
 
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'idimage')]

@@ -20,12 +20,10 @@ class Order
     private ?int $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $reference;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
-    private ?DateTime $date;
+    #[ORM\Column(type:"date")]
+    private ?DateTimeInterface $date;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(name: "idCart", referencedColumnName: "id")]

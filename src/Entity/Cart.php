@@ -17,7 +17,6 @@ class Cart
     private ?int $id;
 
     #[ORM\Column(name:"priceTotal")]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $pricetotal;
 

@@ -19,12 +19,10 @@ class Subscription
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column(name:"startDate")]
-    #[Assert\NotBlank]
+    #[ORM\Column(name:"startDate",type:"date")]
     private ?DateTimeInterface $startdate;
 
-    #[ORM\Column(name:"endDate")]
-    #[Assert\NotBlank]
+    #[ORM\Column(name:"endDate",type:"date")]
     private ?DateTimeInterface $enddate;
 
 

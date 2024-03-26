@@ -17,7 +17,6 @@ class Payment
     private ?int $id;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $type;
 
     

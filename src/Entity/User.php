@@ -19,53 +19,41 @@ class User
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column(length: 255,name:"firstName")]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 20,name:"firstName")]
     private ?string $firstname;
 
-    #[ORM\Column(length: 255,name:"lastName")]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 20,name:"lastName")]
     private ?string $lastname;
 
-    #[ORM\Column(name:"phoneNumber")]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 8,name:"phoneNumber")]
     #[Assert\Positive]
     private ?int $phonenumber;
     
-    #[ORM\Column(name:"birthDate")]
-    #[Assert\NotBlank]
-    private ?DateTime $birthdate;
+    #[ORM\Column(name:"birthDate",type:"date")]
+    private ?DateTimeInterface $birthdate;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $location;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $gender;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 20)]
     private ?string $email;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $password;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $role;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $image;
 
-    #[ORM\Column(name:"creationDate")]
-    #[Assert\NotBlank]
-    private ?DateTime $creationdate;
+    #[ORM\Column(name:"creationDate",type:"date")]
+    private ?DateTimeInterface $creationdate;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $status;
 
     #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Club::class)]
@@ -95,7 +83,7 @@ class User
     #[ORM\InverseJoinColumn(name:"refStadium", referencedColumnName:"reference")]
     private Collection $refstadium;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: LikedEvent::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Likedevent::class)]
     private Collection $likedEvents;
 
 

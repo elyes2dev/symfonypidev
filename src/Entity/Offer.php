@@ -21,16 +21,13 @@ class Offer
     private ?string $name;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $price;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $text;
 
     #[ORM\Column(name:"nbrClub")]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $nbrclub;
 

@@ -11,6 +11,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\Type;
 
 #[ORM\Entity(repositoryClass:ClaimRepository::class)]
 class Claim
@@ -20,37 +21,29 @@ class Claim
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
-    private ?DateTime $date;
+    #[ORM\Column(type:"date")]
+    private ?DateTimeInterface $date;
     
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $description;
     
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $type;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $status;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $satisfaction;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $image;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $response;
 
-    #[ORM\Column(name:"closureDate")]
-    #[Assert\NotBlank]
-    private ?DateTime $closuredate;
+    #[ORM\Column(name:"closureDate",type:"date")]
+    private ?DateTimeInterface $closuredate;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'claims')]
     #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]

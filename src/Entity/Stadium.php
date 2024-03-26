@@ -17,27 +17,22 @@ class Stadium
     private ?string $reference;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $height;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $width;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $price;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
+    #[ORM\Column(type:"float")]
     #[Assert\Positive]
     private ?float $rate;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
     #[Assert\Positive]
     private ?int $maintenance;
     

@@ -17,8 +17,7 @@ class Useractivitylog
     #[ORM\Column]
     private ?int $logid;
 
-    #[ORM\Column(name:"loginTime")]
-    #[Assert\NotBlank]
+    #[ORM\Column(name:"loginTime",type:"time")]
     private ?DateTime $logintimestamp;
 
     #[ORM\Column(name:"loginSuccess")]

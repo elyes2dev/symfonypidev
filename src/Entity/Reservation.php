@@ -20,25 +20,21 @@ class Reservation
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
-    private ?DateTime $date;
+    #[ORM\Column(type:"date")]
+    private ?DateTimeInterface $date;
 
-    #[ORM\Column(name:"startTime")]
-    #[Assert\NotBlank]
-    private ?DateTime $starttime;
+    #[ORM\Column(name:"startTime",type:"time")]
+    private ?DateTimeInterface $starttime;
 
-    #[ORM\Column(name:"endTime")]
-    #[Assert\NotBlank]
-    private ?DateTime $endtime;
+    #[ORM\Column(name:"endTime",type:"time")]
+    private ?DateTimeInterface $endtime;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private ?string $type;
 
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
+    #[ORM\JoinColumn(name: "idPlayer", referencedColumnName: "id")]
     private ?User $idplayer;
 
     #[ORM\ManyToOne(targetEntity: Stadium::class,inversedBy:'reservations')]
