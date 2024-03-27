@@ -22,7 +22,7 @@ class Cart
 
     
     #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'carts')]
-    #[ORM\Column(name:"idUser")]
+    #[ORM\JoinColumn(name:"idUser", referencedColumnName: "id")]
     private ?User $iduser;
 
     
