@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TaskEvent index{% endblock %}
+
+{% block body %}
+    <h1>TaskEvent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Etat</th>
+                <th>CreationDate</th>
+                <th>UpdatedDate</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task_event in task_events %}
+            <tr>
+                <td>{{ task_event.id }}</td>
+                <td>{{ task_event.Description }}</td>
+                <td>{{ task_event.Etat }}</td>
+                <td>{{ task_event.CreationDate ? task_event.CreationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ task_event.UpdatedDate ? task_event.UpdatedDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_task_event_show', {'id': task_event.id}) }}">show</a>
+                    <a href="{{ path('app_task_event_edit', {'id': task_event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_task_event_new') }}">Create new</a>
+{% endblock %}

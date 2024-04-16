@@ -1,0 +1,309 @@
+
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block content %}
+
+{% block title %}
+   <div class="content">
+   <h1 style="position:relative;
+        top:-120px; right:92px;  ">All Events</h1>
+      <div class="bloc" style="width:100%;">
+    
+
+    {% if events is empty %}
+        <p>No events found.</p>
+    {% else %}
+        <table class="table" style="position:relative;
+        top:10px; right:-130px; ">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Participants</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+{% for event in events %}
+    <tr>
+        <td>{{ event.id }}</td>
+        <td>{{ event.name }}</td>
+        <td>{{ event.datedeb|date('Y-m-d H:i:s') }}</td>
+        <td>{{ event.datefin|date('Y-m-d H:i:s') }}</td>
+        <td>{{ event.starttime|date('H:i:s') }}</td>
+        <td>{{ event.endtime|date('H:i:s') }}</td>
+        <td>{{ event.nbrparticipants }}</td>
+        <td>{{ event.price }}</td>
+        <td>
+            <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn-link edit-btn">Edit</a>
+            {{ include('event/_delete_form.html.twig') }}
+            <a href="{{ path('app_add_task', {'eventId': event.id}) }}" class="btn-link add-task-btn">Add Task</a>
+            <a href="{{ path('show_task_by_event', {'eventId': event.id}) }}" class="btn-link show-tasks-btn">Show Tasks</a>
+        </td>
+    </tr>
+{% endfor %}
+
+            </tbody>
+        </table>
+    {% endif %}
+      <a href="/AddEvent" class="btn-link add-event-btn">+ Add Event</a>
+</div>
+
+    </div>
+{% endblock %}
+
+    <br>
+    <br>
+ <style>
+    .container {
+            display: flex;
+            align-items: center;
+        }
+
+        .vertical-line {
+            border-left: 3px solid black; /* Adjust the width and color as needed */
+            height: 35px; /* Adjust the height as needed */
+            margin-right: 10px; /* Adjust the spacing between the line and the text */
+            margin-top: -2px; /* Adjust to move the line a bit above the text */
+        }
+
+        .text-container {
+            display: flex;
+            align-items: center; /* Center the text horizontally */
+        }
+
+        .general {
+            font-size: 24px; /* Adjust the font size of "General" */
+            font-weight: bold; /* Make "General" bold */
+            margin-right: 13px; /* Add some space between "General" and "Information" */
+        }
+
+        .information {
+            font-size: 21px; /* Adjust the font size of "Information" */
+        }
+      
+    </style>
+ {% endblock %}
+
+
+   
+   
+
+
+{% block stylesheets %}
+  
+    <style>
+    .btn-back {
+        padding: 5px 10px; /* Adjust the padding to change the button size */
+    }
+.table {
+      width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-top: -150px;
+    margin-left: -330px;
+
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Additional table styles */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Styling specific columns */
+.table th:first-child,
+.table td:first-child {
+    text-align: left;
+}
+
+/* Styling specific rows */
+.table tbody tr.highlighted {
+    background-color: #ffcc80; /* Example color for highlighted rows */
+}
+
+
+.table .btn-link {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #28b463; /* Couleur de fond des boutons */
+    color: #fff; /* Couleur du texte */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none; /* Supprimer le soulignement */
+    transition: background-color 0.3s ease; /* Animation de transition fluide */
+}
+
+.table .btn-link:hover {
+    background-color: #218838; /* Couleur de fond des boutons au survol */
+}
+
+/* Alignement des éléments dans la colonne des actions */
+.table td:last-child {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacement entre les éléments */
+}
+/* Style pour le bouton "edit" (vert) */
+/* Style for the edit button (green) */
+.edit-btn {
+    background-color: #28a745; /* Background color */
+    color: #fff; /* Text color */
+}
+
+.edit-btn:hover {
+    background-color: #218838; /* Background color on hover */
+}
+
+/* Style for the delete button (red) */
+.delete-btn {
+    background-color: #dc3545; /* Background color */
+    color: #fff; /* Text color */
+}
+
+.delete-btn:hover {
+    background-color: #c82333; /* Background color on hover */
+}
+
+/* Style for the add task button (blue) */
+.add-task-btn {
+    background-color: #007bff; /* Background color */
+    color: #fff; /* Text color */
+}
+
+.add-task-btn:hover {
+    background-color: #0056b3; /* Background color on hover */
+}
+
+/* Style for the show tasks button (another blue) */
+.show-tasks-btn {
+    background-color: #17a2b8; /* Background color */
+    color: #fff; /* Text color */
+}
+
+.show-tasks-btn:hover {
+    background-color: #138496; /* Background color on hover */
+}
+
+/* Style for the link buttons */
+.table .btn-link {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Green button for edit */
+.table .edit-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* Red button for delete */
+.table .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Blue button for add task */
+.table .add-task-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Blue button for show tasks */
+.table .show-tasks-btn {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+/* Hover styles for link buttons */
+.table .btn-link:hover {
+    background-color: #ccc;
+    color: #333;
+}
+
+
+
+    .btn-back img {
+        width: 20px; /* Adjust the width of the image */
+        height: auto; /* Maintain aspect ratio */
+        margin-right: 5px; /* Add some spacing between the image and text */
+    }
+
+    .add-event-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+    }
+
+    .add-event-btn:hover {
+        background-color: #218838;
+    }
+</style>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Add your JavaScript code here
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            var darkModeButton = document.querySelector('.dark-mode-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeButton.textContent = 'Light Mode';
+            } else {
+                darkModeButton.textContent = 'Dark Mode';
+            }
+        }
+            // Toggle dark mode button text
+            var darkModeButton = document.querySelector('.dark-mode-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeButton.textContent = 'Light Mode';
+            } else {
+                darkModeButton.textContent = 'Dark Mode';
+            }
+        
+    </script>
+{% endblock %}
+
+
+
+
+
+
+    
+
+
+

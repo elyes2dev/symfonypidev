@@ -1,0 +1,297 @@
+{{ form_start(form) }}
+<div class="form-group">
+    <div class="label-wrapper">
+        {{ form_label(form.name, 'Event Name') }}
+    </div>
+    <div class="input-wrapper">
+        {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Event Name'}}) }}
+        {% if form_errors(form.name) %}
+            <div class="error-message">{{ form_errors(form.name) }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="label-wrapper">
+        {{ form_label(form.datedeb, 'Start Date') }}
+    </div>
+    <div class="input-wrapper">
+        {{ form_widget(form.datedeb, {'attr': {'class': 'form-control', 'placeholder': 'Start Date', 'type': 'date'}}) }}
+        {% if form_errors(form.datedeb) %}
+            <div class="error-message">{{ form_errors(form.datedeb) }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="label-wrapper">
+        {{ form_label(form.datefin, 'End Date') }}
+    </div>
+    <div class="input-wrapper">
+        {{ form_widget(form.datefin, {'attr': {'class': 'form-control', 'placeholder': 'End Date', 'type': 'date'}}) }}
+        {% if form_errors(form.datefin) %}
+            <div class="error-message">{{ form_errors(form.datefin) }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-6">
+        <div class="label-wrapper">
+            {{ form_label(form.starttime, 'Start Time') }}
+        </div>
+        <div class="input-wrapper">
+            {{ form_widget(form.starttime, {'attr': {'class': 'form-control'}}) }}
+            {% if form_errors(form.starttime) %}
+                <div class="error-message">{{ form_errors(form.starttime) }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <div class="label-wrapper">
+            {{ form_label(form.endtime, 'End Time') }}
+        </div>
+        <div class="input-wrapper">
+            {{ form_widget(form.endtime, {'attr': {'class': 'form-control'}}) }}
+            {% if form_errors(form.endtime) %}
+                <div class="error-message">{{ form_errors(form.endtime) }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="label-wrapper">
+        {{ form_label(form.nbrParticipants, 'Participants') }}
+    </div>
+    <div class="input-wrapper">
+        {{ form_widget(form.nbrParticipants, {'attr': {'class': 'form-control', 'placeholder': 'Participants'}}) }}
+        {% if form_errors(form.nbrParticipants) %}
+            <div class="error-message">{{ form_errors(form.nbrParticipants) }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="label-wrapper">
+        {{ form_label(form.price, 'Price') }}
+    </div>
+    <div class="input-wrapper">
+        {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': 'Price'}}) }}
+        {% if form_errors(form.price) %}
+            <div class="error-message">{{ form_errors(form.price) }}</div>
+        {% endif %}
+    </div>
+</div>
+<div class="form-group" id="image-preview">
+    <!-- Selected image will be displayed here -->
+    {% if event.idimage is not empty %}
+    <div class="existing-images">
+        {% for image in event.idimage %}
+        <div class="existing-image" data-image-id="{{ image.id }}">
+            <img src="{{ asset(image.url) }}" alt="{{ image.name }}">
+            <input type="checkbox" name="removed_images[]" value="{{ image.id }}">
+            <label>Remove</label>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <div class="label-wrapper">
+        {{ form_label(form.images, 'Images') }}
+    </div>
+    <div class="input-wrapper">
+        {{ form_widget(form.images, {'attr': {'class': 'form-control-file', 'id': 'event_images'}}) }}
+        {% if form_errors(form.images) %}
+            <div class="error-message">{{ form_errors(form.images) }}</div>
+        {% endif %}
+    </div>
+</div>
+
+
+<style>
+.existing-image {
+    display: inline-block;
+    margin-right: 10px;
+    max-width: 200px; /* Set maximum width as needed */
+}
+
+    /* Adjusted CSS */
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+        margin-left: 150px;
+    }
+
+    .label-wrapper {
+        display: inline-block;
+        width: 20%; /* Adjust label width as needed */
+        font-weight: bold;
+    }
+
+    .input-wrapper {
+        display: inline-block;
+        width: 75%; /* Adjust input width as needed */
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group textarea,
+    .form-group select,
+    .form-group input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+
+
+
+    .selected-image {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .selected-image img {
+        max-width: 100px;
+        height: auto;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .error-message {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        color: red;
+        font-size: 12px;
+    }
+
+    .btn {
+        margin-top: 20px;
+        cursor: pointer;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-back {
+        background-color: #dc3545;
+        margin-right: 10px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        opacity: 0.8;
+    }
+</style>
+
+
+<script>
+    // Function to preview selected images
+// Function to preview selected images
+function previewImage(event, callback) {
+    const input = event.target;
+    const preview = document.getElementById('image-preview');
+
+    if (input.files && input.files.length > 0) {
+        for (let i = 0; i < input.files.length; i++) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // Create img element for preview
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Selected Image';
+                img.className = 'existing-image';
+                img.style.maxWidth = '200px'; // Adjust the width as needed
+                preview.appendChild(img);
+
+                // Execute the callback if provided
+                if (callback && typeof callback === 'function') {
+                    callback(img);
+                }
+            };
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+}
+
+// Call the previewImage function with a callback to add the checkbox
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('event_images');
+    const preview = document.getElementById('image-preview');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(event) {
+            // Clear the existing preview images
+            preview.innerHTML = ''; // Clear existing preview
+
+            // Callback function to add checkbox
+            function addCheckbox(img) {
+                // Create checkbox for removing the image
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'removed_images[]';
+                checkbox.value = ''; // Empty value for new images
+                img.parentNode.appendChild(checkbox);
+            }
+
+            // Call previewImage with the addCheckbox callback
+            previewImage(event, addCheckbox);
+        });
+    }
+});
+
+// Remove image functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const removeLinks = document.querySelectorAll('.remove-image');
+
+    removeLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const imageContainer = this.parentNode;
+            const imageId = imageContainer.dataset.imageId;
+            
+            // Remove the image container from the preview
+            imageContainer.remove();
+
+            // Remove the corresponding file input if the image was selected
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                const selectedFiles = fileInput.files;
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (selectedFiles[i].getAttribute('data-image-id') === imageId) {
+                        fileInput.value = ''; // Clear the file input
+                        break;
+                    }
+                }
+            }
+        });
+    });
+});
+
+    
+</script>
+
+
+<button type="submit" class="btn btn-primary btn-submit">
+    <img src="{{ asset('EventImages/ballin.png') }}" alt="">
+    {{ button_label|default('Save') }}
+</button>
+
+<button type="button" onclick="window.location.href='{{ path('show_event') }}'" class="btn btn-primary btn-back">
+
+    <img src="{{ asset('EventImages/return.png') }}" alt="Back to list">
+</button>
+
+{{ form_end(form) }}

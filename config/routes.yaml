@@ -1,0 +1,63 @@
+# config/routes.yaml
+
+index:
+    path: /
+    controller: App\Controller\DashboardController::index
+
+add_event:
+    path: /AddEvent
+    controller: App\Controller\AddEventController::index
+
+show_event:
+    path: /ShowEvent
+    controller: App\Controller\ShowEventController::index
+# config/routes.Ayaml
+
+# Define your routes here
+
+# Example route definition for adding an image
+AddImage:
+    path: /add-image
+    controller: App\Controller\ImageController::addImage
+    methods: [GET, POST]
+
+upload_image_endpoint:
+    path: /upload-image
+    controller: App\Controller\AddEventController::uploadImageAction
+    methods: [POST]
+
+submit_event_form:
+    path: /submit-event-form
+    controller: App\Controller\AddEventController::index
+    methods: [POST]
+
+submit_task_form:
+    path: /submit-event-form
+    controller: App\Controller\AddEventController::index
+    methods: [POST]
+# config/routes.yaml
+
+app_event_edit:
+    path: '/event/{id}/edit'
+    controller: 'App\Controller\UpdateEventController::edit'
+    methods: ['GET', 'POST']
+
+remove_image:
+    path: /remove-image
+    controller: App\Controller\ImageController::removeImage
+    methods: [POST]
+
+show_task_by_event:
+    path: /ShowTask/{eventId}
+    controller: App\Controller\ShowTaskController::index
+    methods: [GET]
+
+app_task_edit:
+    path: '/Task/{id}/edit'
+    controller: 'App\Controller\TaskEventController::edit'
+    methods: ['GET', 'POST']
+
+app_add_task:
+    path: '/add_task/{eventId}'
+    controller: 'App\Controller\TaskEventController::add'
+    methods: ['GET', 'POST']
