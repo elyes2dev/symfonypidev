@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Profile Picture Section -->
+                <div class="text-center">
+                    <img src="{{ asset('userImages/' ~ app.user.image) }}" alt="Profile Picture" class="profile-picture mb-3">
+                    <h4>Profile Picture</h4>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <!-- User Info Section -->
+                 {% if app.user.role == 'Player' %}
+                    <h2>User Profile</h2>
+                {% elseif app.user.role == 'Admin' %}
+                    <h2>Admin Profile</h2>
+                {% endif %}
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" class="form-control" id="firstName" value="{{ app.user.firstname }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" class="form-control" id="lastName" value="{{ app.user.lastname }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number:</label>
+                            <input type="tel" class="form-control" id="phoneNumber" value="{{ app.user.phonenumber }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="location">Location:</label>
+                            <input type="text" class="form-control" id="location" value="{{ app.user.location }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phoneNumber">Email:</label>
+                            <input type="tel" class="form-control" id="phoneNumber" value="{{ app.user.email }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="location">Birth date:</label>
+                            <input type="text" class="form-control" id="location" value="{{ app.user.birthdate|date('Y-m-d') }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-success" href="{{ path('app_user_edit', {'id' : app.user.id}) }}">Modify Profile</a>
+                 {% if app.user.role == 'Admin' %}
+                <a class="btn btn-primary" href="{{ path('app_dashboard') }}">Admin Dashboard</a>
+
+                {% else %}
+                    {% if app.user.role == 'Player' %}
+                        <a class="btn btn-primary" href="{{ path('app_home') }}">return home</a>
+                     {% endif %}
+
+                 
+                    {% if app.user.role == 'FieldOwner' %}
+                        <a class="btn btn-primary" href="{{ path('app_dashboard') }}">return home</a>
+                     {% endif %}
+                 {% endif %}
+                <a class="btn btn-danger" href="{{ path('app_logout') }}">Logout</a>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

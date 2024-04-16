@@ -1,0 +1,17 @@
+index:
+    path: /
+    controller: App\Controller\DashboardController::index
+
+
+app_dashboard: 
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+
+dashUsers: 
+    path: /dashboard/users
+    controller: App\Controller\DashboardController::DashUsers
+
+    
+app_home:
+    path: /home
+    controller: App\Controller\HomeController::index
