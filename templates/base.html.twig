@@ -1,0 +1,25 @@
+{# base.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MatchMate</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ asset('Images/Ball.ico') }}">
+    <link rel="stylesheet" href="{{ asset('styles.css') }}">
+    
+    {% block stylesheets %}
+        
+        {# Include specific CSS styles for the product index page #}
+        <link rel="stylesheet" href="{{ asset('product_index_styles.css') }}">  
+    {% endblock %}
+
+   
+
+</head>
+<body>
+    {% block body %}{% endblock %}
+</body>
+</html>
+

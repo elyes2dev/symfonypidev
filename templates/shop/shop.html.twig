@@ -1,0 +1,147 @@
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+  <link rel="icon" type="image/x-icon" href="{{ asset('Images/Ball.ico') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchMate</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('styles2.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+</head>
+<body>
+        <nav class="navbar">
+            <div class="navbar-logo">
+            <img src="{{ asset('Images/logo.png') }}" alt="Logo">
+            </div>
+            <ul class="navbar-items">
+            <li ><a href="{{ path('app_home') }}">Home</a></li>
+            <li><a href="#">Reservation</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Claim</a></li>
+            </ul>
+            <div class="navbar-icons">
+                <img src="{{ asset('Images/panier.png') }}" alt="panier">
+                <img src="{{ asset('Images/utilisateur (1).png') }}" alt="utilisateur">
+            
+            </div>
+        </nav>
+
+        <div class="black-div">
+            <div class="horizontal-div">
+              <div class=" text-overlay">
+                <span>Football </span>
+                <span>Discount 50%</span>
+                <button class="btn1 btn-success">Get Discount</button>
+              </div>
+              <div class="vertical-div">
+                <img src="{{ asset('Images/football.png') }}" alt="Image">
+              </div>
+            </div>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><brr><br><br><br><br><br><br><br>
+
+          
+
+          <div class="container">
+    <h1 class="my-4 text-center">Welcome to our Shop</h1>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if product.image %}
+                <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="Image du sport {{ product.name }}">
+                {% else %}
+                <div class="card-img-top" style="height: 200px; background-color: #ccc;"></div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ product.name }}</h5>
+                    <p class="card-text text-center">
+                        <strong>Reference:</strong> {{ product.reference }}<br>
+                        <strong>Price:</strong> ${{ product.price }}
+                    </p>
+                    <div class="text-center">
+                          <a href="#" class="btn btn-success add-to-cart" onclick="addToCart('{{ product.name }}', '{{ product.price }}')">
+                                <i class="fas fa-shopping-cart"></i> Add to cart
+                          </a>
+
+                        <button class="btn btn-danger ml-2"><i class="fas fa-heart"></i> Like</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col">
+            <p>Aucun enregistrement trouvé</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+                        
+
+        
+    
+        
+
+        <footer class="footer">
+            <div class="footer-section">
+                <div class="logo-and-paragraph">
+                    <img src="images/logo.png" alt="Footer Logo">
+                    <p>Copyrights MiCasa Homes and Properties</p>
+                    <p>All rights reserved</p>
+                </div>
+            </div>
+            <div class="footer-section">
+                <ul class="footer-list">
+                  <h3>Company</h3>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <ul class="footer-list">
+                  <h3>Support</h3>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Information</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                </ul>
+            </div>
+        </footer>
+
+       
+
+
+
+
+
+<script>
+    function addToCart(productName, productPrice) {
+        // You can customize the SweetAlert message here
+        Swal.fire({
+            icon: 'success',
+            title: 'Item Added to Cart',
+            text: productName + ' added to your cart. Price: $' + productPrice,
+            showConfirmButton: false,
+            timer: 1500
+        });
+        
+        // Here you can add your logic to actually add the product to the cart
+        // For now, let's just log the product name and price
+        console.log('Added to cart:', productName, 'Price:', productPrice);
+    }
+</script>
+
+
+
+  </body>
+  </head>
+  </html>
+  {% endblock %}
