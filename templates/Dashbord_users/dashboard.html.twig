@@ -82,13 +82,19 @@
         }
 
         header {
-            background-color: #fff;
-            color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+           background-color: #fff;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index : 1000;
+           
         }
         .club-buttons {
             display: none;
@@ -109,7 +115,7 @@
     
 
 .sidebar {
-    width: 220px; /* Adjust width as needed */
+   width: 220px; /* Adjust width as needed */
     height: calc(100vh - 100px); /* Calculate height to fit the viewport */
     padding: 10px; /* Reduce padding */
     font-family: 'Segoe UI', sans-serif;
@@ -202,9 +208,9 @@
 
 /* Ensure content starts from the right of the sidebar */
 .content {
-    margin-top: 50px; /* Adjusted margin-top to make space for the header */
-    margin-left: 190px; /* Adjusted margin-left to make space for the sidebar */
-    margin-right:50px;
+    margin-top: 150px; /* Adjusted margin-top to make space for the header */
+    margin-left: 240px; /* Adjusted margin-left to make space for the sidebar */
+    margin-right:20px;
     display: flex;
     flex-wrap: wrap; /* Allow content to wrap to the next line if needed */
     justify-content: start; /* Center the table horizontally */
@@ -231,12 +237,12 @@
             padding: 20px;
             font-family: 'Segoe UI', sans-serif;
             position: fixed;
-            top: 94px;
+            top: 80px;
             bottom: 0;
             overflow-y: auto;
             background-color: #fff;
             color: #333;
-            margin-top: 20px;
+           
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
        

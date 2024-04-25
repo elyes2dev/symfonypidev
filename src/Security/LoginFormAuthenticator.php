@@ -104,7 +104,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     $user = $token->getUser();
         // Check the role of the authenticated user and redirect accordingly
         if ($user->getRole() === 'FieldOwner') {
-            return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+            return new RedirectResponse($this->urlGenerator->generate('app_user_profile'));
         } elseif ($user->getRole() === 'Player') {
             return new RedirectResponse($this->urlGenerator->generate('app_home'));
         } elseif ($user->getRole() === 'Admin') {

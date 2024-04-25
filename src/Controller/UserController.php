@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Form\UserFullype;
+use App\Form\ChangePasswordType;
+use Symfony\Component\Form\FormError;
 use App\Form\EditProfileType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -196,17 +198,27 @@ class UserController extends AbstractController
         ]);
     }
 */
-
-    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+   /* user deletes his own profile and gets redirected to registration page */ 
+    #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        // Check if the request is a POST request
+        
+            // Get the entity manager
+            $entityManager = $this->getDoctrine()->getManager();
+            
+            // Remove the user from the database
             $entityManager->remove($user);
             $entityManager->flush();
-        }
 
-        return $this->redirectToRoute('dashUsers', [], Response::HTTP_SEE_OTHER);
+            // Redirect to a success page or perform any other action
+            return $this->redirectToRoute('app_register'); // Replace 'dashboard' with your desired route
+        
+
+        // If the request is not a POST request, return a method not allowed response
+       
     }
+
     #[Route('/{id}/delete', name: 'app_user_del',  methods: ['GET', 'POST'])]
     public function deleteUser(Request $request, User $user): Response
     {
@@ -226,4 +238,36 @@ class UserController extends AbstractController
         // If the request is not a POST request, return a method not allowed response
        
     }
+
+    #[Route('/changepassword/{id}', name: 'app_user_passchange', methods: ['GET', 'POST'])]
+    public function changePassword(Request $request, UserPasswordHasherInterface $userPasswordHasher,  UserRepository $userRepo, user $user)
+    {
+        $form = $this->createForm(ChangePasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $oldPassword = $form->get('oldPassword')->getData();
+
+            if ($userPasswordHasher->isPasswordValid($user, $oldPassword)) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('newPassword')->getData()
+                    )
+                );
+                $userRepo->save($user, true);
+                $this->addFlash('success', 'Your password has been changed.');
+                 // Redirect to a success page or perform any other action
+            return $this->redirectToRoute('app_user_profile'); // Replace 'dashboard' with your desired route
+               
+            } else {
+                $form->get('oldPassword')->addError(new FormError('invalid password , re-enter '));
+            }
+        }
+        return $this->renderForm('user/passmodify.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
 }
