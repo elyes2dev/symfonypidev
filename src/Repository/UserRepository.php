@@ -117,6 +117,13 @@ public function getAgeDistribution(): array
 
 
 
+ public function findAllOrderedByIdDescQuery()
+ {
+     return $this->createQueryBuilder('u')
+         ->orderBy('u.id', 'DESC')
+         ->getQuery();
+ }
+
  /**
      * Get user counts by region.
      *
@@ -139,5 +146,7 @@ public function getAgeDistribution(): array
 
         return $usersByRegion;
     }
+
+   
 
 }

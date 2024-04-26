@@ -9,11 +9,12 @@ app_dashboard:
 
 dashUsers: 
     path: /dashboard/users
-    controller: App\Controller\DashboardController::DashUsers
+    controller: App\Controller\DashboardController::dashUsers
 
     
 app_home:
     path: /home
     controller: App\Controller\HomeController::index
+
 
 

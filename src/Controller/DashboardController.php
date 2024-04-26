@@ -10,11 +10,24 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+use Doctrine\ORM\QueryBuilder;
+
+
+
+
 
 
 
 class DashboardController extends AbstractController
 {   
+
+  
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(UserRepository $userRepository): Response
     {
@@ -58,21 +71,35 @@ class DashboardController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard/users', name: 'dashUsers')]
-    public function DashUsers(EntityManagerInterface $entityManager): Response
+    #[Route('/dashboard/users/{page}', name: 'dashUsers', requirements: ['page' => '\d+'])]
+    public function dashUsers(Request $request, UserRepository $userRepository): Response
     {
-        // Fetch all users using Doctrine's Repository
-        $userRepository = $entityManager->getRepository(User::class); // Replace 'User' with your actual user entity class
-        $users = $userRepository->findAll();
+        $itemsPerPage = 5; // Define the number of items per page
+        $currentPage = $request->query->getInt('page', 1); // Retrieve the current page number from the query parameters
     
-        // Optional: Filter or sort users if needed (explained later)
+        $query = $userRepository->findAllOrderedByIdDescQuery();
     
-        return $this->render('dashbord_users/dashboard.html.twig', [
-            'controller_name' => 'DashboardController',
-            'users' => $users, // Pass the retrieved users to the template
+        // Initialize the Doctrine Paginator with the query
+        $paginator = new Paginator($query);
+    
+        // Set the pagination parameters
+        $paginator->getQuery()
+                  ->setFirstResult($itemsPerPage * ($currentPage - 1))
+                  ->setMaxResults($itemsPerPage);
+    
+        // Calculate the total number of items and pages
+        $totalItems = count($paginator);
+        $pagesCount = ceil($totalItems / $itemsPerPage);
+    
+        // Render the template with the paginated results
+        return $this->render('Dashbord_users/dashboard.html.twig', [
+            'users' => $paginator,
+            'CurrentPage' => $currentPage,
+            'pagesCount' => $pagesCount,
         ]);
     }
-
+    
+    
 
 
 
