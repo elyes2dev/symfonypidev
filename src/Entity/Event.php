@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\EventRepository;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use DateTimeInterface;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -169,7 +169,8 @@ private ?int $nbrparticipants;
 
         return $this;
     }
-
+     
+    #[Groups(["event_read"])]
     public function getIdclub(): ?Club
     {
         return $this->idclub;

@@ -7,10 +7,16 @@ index:
 add_event:
     path: /AddEvent
     controller: App\Controller\AddEventController::index
+Qr_Code:
+    path: /qrcode/{eventId}
+    controller: App\Controller\QrCodeController::generateQRCode
 
 show_event:
     path: /ShowEvent
     controller: App\Controller\ShowEventController::index
+
+
+
 # config/routes.Ayaml
 
 # Define your routes here
@@ -25,6 +31,16 @@ upload_image_endpoint:
     path: /upload-image
     controller: App\Controller\AddEventController::uploadImageAction
     methods: [POST]
+
+show_statistics:
+    path: /ShowStatistics
+    controller: App\Controller\ShowEventController::pieChart
+
+
+like_event:
+    path: /event/{id}/like
+    controller: 'App\Controller\HomeController::likeEventAction'
+    methods: ['POST']
 
 submit_event_form:
     path: /submit-event-form
@@ -61,3 +77,11 @@ app_add_task:
     path: '/add_task/{eventId}'
     controller: 'App\Controller\TaskEventController::add'
     methods: ['GET', 'POST']
+
+weather_show:
+    path: '/weather'
+    controller: 'App\Controller\WeatherController::showWeatherForecast'
+
+# config/routes.yaml
+
+

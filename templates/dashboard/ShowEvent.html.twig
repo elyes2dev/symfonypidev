@@ -5,16 +5,30 @@
 
 {% block title %}
    <div class="content">
-   <h1 style="position:relative;
-        top:-120px; right:92px;  ">All Events</h1>
+        <div style="position: absolute; top: 92px; left: 218px">
+            <h1 style="display: inline-block;">All Events</h1>
+            <form method="GET" action="{{ path('ShowEvent') }}" id="search-form">
+                <label for="search">Search by Name, Price, or Number of Participants:</label>
+                <input type="text" id="search" name="search" value="{{ searchTerm }}">
+
+
+                <label for="date">Date:</label>
+                <input type="date" id="date"  value="{{ date }}">
+
+                <button type="submit">Search</button>
+            </form>
+
+
+        </div>
       <div class="bloc" style="width:100%;">
     
 
+ 
     {% if events is empty %}
         <p>No events found.</p>
     {% else %}
         <table class="table" style="position:relative;
-        top:10px; right:-130px; ">
+        top:100px; right:-130px;  ">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -52,6 +66,7 @@
         </table>
     {% endif %}
       <a href="/AddEvent" class="btn-link add-event-btn">+ Add Event</a>
+        <a href="/ShowStatistics" class="btn-link add-event-btn">+ Show Statistics</a>
 </div>
 
     </div>
@@ -98,6 +113,24 @@
 {% block stylesheets %}
   
     <style>
+     .content {
+        margin-top: 100px; /* Adjusted margin-top to make space for the header */
+        margin-left: 200px; /* Adjusted margin-left to make space for the sidebar */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bloc {
+        margin-top: 20px; /* Add margin to create space between the form and the block */
+    }
+
+    .content form {
+        margin-bottom: 20px; /* Add margin to create space between the form and the table */
+    }
+
+    .btn-link {
+        margin-top: 20px; /* Add margin between the table and the "Add Event" button */
+    }
     .btn-back {
         padding: 5px 10px; /* Adjust the padding to change the button size */
     }
@@ -266,6 +299,7 @@
         text-decoration: none;
         transition: background-color 0.3s ease;
         font-size: 16px;
+        margin-top: 106px;
     }
 
     .add-event-btn:hover {
@@ -294,7 +328,37 @@
             } else {
                 darkModeButton.textContent = 'Dark Mode';
             }
-        
+        // Add event listener for input fields to submit the form when their values change
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listener for form submission
+            document.getElementById('search-form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Get form data
+                const formData = new FormData(this);
+
+                // Send form data via AJAX
+                fetch(this.action, {
+                    method: 'GET',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Update the content area with the new search results
+                        document.querySelector('.content').innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+
+            // Log a message when the page is fully loaded
+            console.log('Page loaded!');
+        });
+
+
+
+
     </script>
 {% endblock %}
 
