@@ -38,7 +38,7 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $gender;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 255)]
     private ?string $email;
 
     #[ORM\Column(length: 255)]
@@ -70,6 +70,7 @@ class User
 
     #[ORM\OneToMany(mappedBy: 'idplayer', targetEntity: Reservation::class)]
     private Collection $reservations;
+
 
     #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Notification::class)]
     private Collection $notifications;

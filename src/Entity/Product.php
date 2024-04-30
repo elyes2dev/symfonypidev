@@ -44,8 +44,8 @@ class Product
 
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idproduct')]
     #[ORM\JoinTable(name:"imageproduct")]
-    #[ORM\JoinColumn(name:"idImage", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idProduct", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idProduct", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idImage", referencedColumnName:"id")]
     private Collection $idimage;
 
     /**

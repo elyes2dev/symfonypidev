@@ -1,0 +1,75 @@
+{{ form_start(form) }}
+<div class="form-group">
+    {{ form_label(form.user) }}
+    {{ form_widget(form.user) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.idReservation) }}
+    {{ form_widget(form.idReservation) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.responseQuestion1) }}
+    {{ form_widget(form.responseQuestion1) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.responseQuestion2) }}
+    {{ form_widget(form.responseQuestion2) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.responseQuestion3) }}
+    {{ form_widget(form.responseQuestion3) }}
+</div>
+
+<div class="button-container">
+    <a href="{{ path('app_feedback_index') }}" class="btn search-button" style="width: 100px; height: 30px; background-color: #007BFF; color: white; line-height: 30px; text-align: center; display: inline-block; border-radius: 4px; text-decoration: none;">
+        Feedbacks
+    </a>
+    <button class="btn search-button" style="width: 100px; height: 50px; line-height: 30px; margin-left: 270px">
+        {{ button_label|default('Save') }}
+        <i class="fas fa-plus"></i> <!-- Optional: Only include if you want the plus icon -->
+    </button>
+</div>
+
+
+
+{{ form_end(form) }}
+<style>
+    .form-group {
+        margin-bottom: 15px; /* Adds space between form groups */
+    }
+
+    .form-group label {
+        display: block; /* Ensures label is on its own line */
+        color: #0fa563; /* Light green color */
+        font-family: 'Lato', sans-serif; /* Stylish, modern font */
+        font-size: 16px; /* Sufficiently large text */
+        font-weight: bold; /* Bold text */
+        cursor: default; /* Non-interactive cursor on hover */
+        margin-top: 5px; /* Space above label */
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%; /* Full width for form elements */
+        padding: 8px; /* Padding for comfort */
+        font-size: 16px; /* Uniform font size */
+        margin-top: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box; /* Border and padding included in width */
+    }
+
+    button.btn {
+        width: 100px; /* Fixed width for button */
+        height: 50px; /* Fixed height for button */
+        margin-top: 20px; /* Space above the button */
+        background-color: #4CAF50; /* Green background */
+        color: white; /* White text */
+        border: none; /* No border */
+        border-radius: 4px; /* Rounded corners */
+        cursor: pointer; /* Indicates button is clickable */
+    }
+
+    button.btn:hover {
+        background-color: #45a049; /* Darker green on hover */
+    }
+</style>
+

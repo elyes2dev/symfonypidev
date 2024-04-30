@@ -32,19 +32,21 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $type;
 
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(name: "idPlayer", referencedColumnName: "id")]
     private ?User $idplayer;
 
-    #[ORM\ManyToOne(targetEntity: Stadium::class,inversedBy:'reservations')]
+    #[ORM\ManyToOne(targetEntity: Stadium::class, inversedBy:'reservations', cascade: ["remove"])]
     #[ORM\JoinColumn(name: 'refStadium', referencedColumnName: 'reference')]
     private ?Stadium $refstadium;
 
+    #[ORM\OneToMany(mappedBy: 'idReservation', targetEntity: Feedback::class, cascade: ['remove'])]
+    private Collection $feedbacks;
+
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idreservation')]
     #[ORM\JoinTable(name:"paymentreservation")]
-    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idreservation", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idreservation", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idPayment", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**
@@ -53,6 +55,7 @@ class Reservation
     public function __construct()
     {
         $this->idpayment = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,4 +159,43 @@ class Reservation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedback $feedback): static
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks->add($feedback);
+            $feedback->setIdReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedback $feedback): static
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getIdReservation() === $this) {
+                $feedback->setIdReservation(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        // Example of string representation: "Reservation for [Date] at [StartTime] - [EndTime]"
+        return sprintf(
+            'Reservation for %s at %s - %s',
+            $this->date->format('Y-m-d'),
+            $this->starttime->format('H:i'),
+            $this->endtime->format('H:i')
+        );
+    }
 }

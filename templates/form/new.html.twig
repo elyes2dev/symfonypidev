@@ -1,0 +1,48 @@
+{# templates/form/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Form{% endblock %}
+
+{% block body %}
+    <h1>Create New Form</h1>
+
+    {{ form_start(formForm) }}
+    {{ form_row(formForm.name) }}
+    {{ form_row(formForm.creationdate) }}
+
+    {# <h2>Questions</h2>
+    <div id="formquestions">
+        {{ form_widget(formForm.formquestions) }}
+    </div>
+
+    <button type="button" id="addQuestion">Add Question</button> #}
+
+    <button type="submit">Save</button>
+    {{ form_end(formForm) }}
+
+    <a href="{{ path('app_form_index') }}">back to list</a>
+{% endblock %}
+
+{# {% block javascripts %}
+    <script>
+        var $questionHolder = $('#formquestions');
+
+        $('#addQuestion').click(function() {
+            var index = $questionHolder.data('index');
+            var newQuestion = $('<div class="question"></div>').append(
+                $('<label for="form_formquestions_' + index + '_question">Question</label>'),
+                $('<select id="form_formquestions_' + index + '_question" name="form[formquestions][' + index + '][question]"></select>')
+            );
+
+            // Add options for each question
+            {% for question in questions %}
+                newQuestion.find('select').append('<option value="{{ question.id }}">{{ question.text }}</option>');
+            {% endfor %}
+
+            $questionHolder.append(newQuestion);
+            $questionHolder.data('index', index + 1);
+        });
+    </script>
+{% endblock %} #}
+

@@ -14,5 +14,15 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-    // You can add custom repository methods here
+    // Repository method to fetch reservation statistics by month
+    public function getMonthlyReservationStatistics(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->select("SUBSTRING(r.date, 1, 7) AS monthYear, COUNT(r.id) AS count")
+            ->groupBy("monthYear")  
+            ->getQuery()
+            ->getResult();
+    }
+    
+
 }

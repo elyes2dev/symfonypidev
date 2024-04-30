@@ -49,8 +49,8 @@ class Event
     
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idevent')]
     #[ORM\JoinTable(name:"imageevent")]
-    #[ORM\JoinColumn(name:"idImage", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idEvent", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idEvent", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idImage", referencedColumnName:"id")]
     private Collection $idimage;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Likedevent::class)]
@@ -62,8 +62,8 @@ class Event
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idevent')]
     #[ORM\JoinTable(name:"paymentevent")]
-    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idEvent", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idEvent", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idPayment", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**

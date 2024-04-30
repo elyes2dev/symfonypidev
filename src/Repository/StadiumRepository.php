@@ -14,5 +14,14 @@ class StadiumRepository extends ServiceEntityRepository
         parent::__construct($registry, Stadium::class);
     }
 
-    // You can add custom repository methods here
+    public function findAllWithClub(): array
+{
+    return $this->createQueryBuilder('s')
+        ->addSelect('c') // Select the associated club entity
+        ->leftJoin('s.idclub', 'c') // Join the club entity
+        ->getQuery()
+        ->getResult();
+}
+
+
 }

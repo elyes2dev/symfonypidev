@@ -1,0 +1,19 @@
+{% block body %}
+    <h1>Create New Form</h1>
+
+    {{ form_start(formForm) }}
+    {{ form_row(formForm.name) }}
+    {{ form_row(formForm.creationdate) }}
+
+    <h2>Questions</h2>
+    <div id="formquestions">
+        {{ form_widget(formForm.formquestions) }}
+    </div>
+
+    <button type="button" id="addQuestion">Add Question</button>
+
+    <button type="submit">Save</button>
+    {{ form_end(formForm) }}
+
+    <a href="{{ path('app_form_index') }}">back to list</a>
+{% endblock %}

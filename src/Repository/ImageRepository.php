@@ -14,5 +14,5 @@ class ImageRepository extends ServiceEntityRepository
         parent::__construct($registry, Image::class);
     }
 
-    // You can add custom repository methods here
+  
 }

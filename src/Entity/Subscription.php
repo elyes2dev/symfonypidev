@@ -36,8 +36,8 @@ class Subscription
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idsubscription')]
     #[ORM\JoinTable(name:"paymentsubscription")]
-    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idSubscription", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idSubscription", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idPayment", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**

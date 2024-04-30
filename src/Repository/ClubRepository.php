@@ -15,4 +15,28 @@ class ClubRepository extends ServiceEntityRepository
     }
 
     // You can add custom repository methods here
+    public function findAllWithOneStadium()
+{
+    return $this->createQueryBuilder('c')
+        ->leftJoin('c.stadiums', 's')
+        ->addSelect('s')
+        ->groupBy('c.id')
+        ->getQuery()
+        ->getResult();
+}
+
+  // You can add custom repository methods here
+  public function findImagesByClubId(int $clubId): array
+  {
+      $entityManager = $this->getEntityManager();
+
+      $query = $entityManager->createQuery(
+          'SELECT i
+          FROM App\Entity\Image i
+          JOIN i.idclub c
+          WHERE c.id = :clubId'
+      )->setParameter('clubId', $clubId);
+
+      return $query->getResult();
+  }
 }

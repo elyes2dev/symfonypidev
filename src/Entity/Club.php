@@ -15,6 +15,8 @@ use SebastianBergmann\Timer\Timer;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Validator\Constraints\Time;
 use Symfony\Component\Validator\Constraints\Timezone;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 #[ORM\Entity(repositoryClass:ClubRepository::class)]
 class Club
@@ -24,44 +26,49 @@ class Club
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name;
+    #[ORM\Column(length: 255, nullable:true)]
+    #[Assert\NotBlank(message: 'Name cannot be blank')]
+    #[Assert\Regex(pattern: '/^[a-zA-Z\s]*$/', message: 'Name cannot contain symbols or numbers')]
+    private ?string $name=null;
+    
 
-    #[ORM\Column(length: 255)]
-    private ?string $governorate;
+    #[ORM\Column(length: 255, nullable:true)]
+    #[Assert\NotBlank(message: 'Governorate cannot be blank')]
+    private ?string $governorate=null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $city;
+    #[ORM\Column(length: 255, nullable:true)]
+    #[Assert\NotBlank(message: 'City cannot be blank')]
+    private ?string $city=null;
 
-    #[ORM\Column(name:"startTime",type:"time")]
-    private ?DateTime $starttime;
-
-    #[ORM\Column(name:"endTime",type:"time")]
-    private ?DateTime $endtime;
+    #[ORM\Column(name: "startTime", type: "time")]
+    #[Assert\LessThan(propertyPath: "endtime", message: "Start time must be before end time")]
+    private ?DateTimeInterface $starttime;
+    
+    #[ORM\Column(name: "endTime", type: "time")]
+    #[Assert\GreaterThan(propertyPath: "starttime", message: "End time must be after start time")]
+    private ?DateTimeInterface $endtime;
 
     #[ORM\Column(name:"stadiumNbr")]
-    #[Assert\Positive]
     private ?int $stadiumnbr;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description;
+    #[ORM\Column(length: 255,nullable:true)]
+    #[Assert\NotBlank(message: 'Description cannot be blank')]
+    private ?string $description=null;
 
     #[ORM\Column]
-    #[Assert\Positive]
     private ?float $longitude;
 
     #[ORM\Column]
-    #[Assert\Positive]
     private ?float $latitude;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clubs')]
     #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
     private ?User $iduser;
 
-    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idclub')]
+    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'idclub', cascade: ["remove"])]
     #[ORM\JoinTable(name:"imageclub")]
-    #[ORM\JoinColumn(name:"idImage", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idClub", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idClub", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idImage", referencedColumnName:"id")]
     private Collection $idimage;
 
     #[ORM\OneToMany(mappedBy: 'idclub', targetEntity: Claim::class)]
@@ -70,9 +77,8 @@ class Club
     #[ORM\OneToMany(mappedBy: 'idclub', targetEntity: Event::class)]
     private Collection $events;
 
-    #[ORM\OneToMany(mappedBy: 'idclub', targetEntity: Event::class)]
+    #[ORM\OneToMany(mappedBy: 'idclub', targetEntity: Stadium::class, cascade: ["remove"])]
     private Collection $stadiums;
-
     /**
      * Constructor
      */
@@ -106,7 +112,7 @@ class Club
         return $this->governorate;
     }
 
-    public function setGovernorate(string $governorate): static
+    public function setGovernorate(?string $governorate): static
     {
         $this->governorate = $governorate;
 
@@ -130,7 +136,7 @@ class Club
         return $this->starttime;
     }
 
-    public function setStarttime(\DateTimeInterface $starttime): static
+    public function setStarttime(?\DateTimeInterface $starttime): static
     {
         $this->starttime = $starttime;
 
@@ -142,7 +148,7 @@ class Club
         return $this->endtime;
     }
 
-    public function setEndtime(\DateTimeInterface $endtime): static
+    public function setEndtime(?\DateTimeInterface $endtime): static
     {
         $this->endtime = $endtime;
 
@@ -154,7 +160,7 @@ class Club
         return $this->stadiumnbr;
     }
 
-    public function setStadiumnbr(int $stadiumnbr): static
+    public function setStadiumnbr(?int $stadiumnbr): static
     {
         $this->stadiumnbr = $stadiumnbr;
 
@@ -166,7 +172,7 @@ class Club
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -227,11 +233,11 @@ class Club
     }
 
     public function removeIdimage(Image $idimage): static
-    {
-        $this->idimage->removeElement($idimage);
+{
+    $this->idimage->removeElement($idimage);
 
-        return $this;
-    }
+    return $this;
+}
 
     /**
      * @return Collection<int, Claim>

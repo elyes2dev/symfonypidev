@@ -1,3 +1,18 @@
 index:
     path: /
     controller: App\Controller\DashboardController::index
+
+    # routes.yaml
+remove_image:
+    path: /remove-image
+    controller: App\Controller\ImageController::removeImage
+    methods: [POST]
+app_club_stadiums:
+    path: '/{id}/stadiums'
+    controller: 'App\Controller\StadiumController::showStadiums'
+    methods: ['GET']
+ 
+    
+
+    
+

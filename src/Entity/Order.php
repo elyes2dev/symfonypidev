@@ -31,8 +31,8 @@ class Order
 
     #[ORM\ManyToMany(targetEntity: Payment::class, inversedBy: 'idorder')]
     #[ORM\JoinTable(name:"paymentorder")]
-    #[ORM\JoinColumn(name:"idPayment", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"idOrder", referencedColumnName:"id")]
+    #[ORM\JoinColumn(name:"idOrder", referencedColumnName:"id")]
+    #[ORM\InverseJoinColumn(name:"idPayment", referencedColumnName:"id")]
     private Collection $idpayment;
 
     /**

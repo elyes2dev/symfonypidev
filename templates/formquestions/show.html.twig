@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formquestions{% endblock %}
+
+{% block body %}
+    <h1>Formquestions</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ formquestion.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_formquestions_index') }}">back to list</a>
+
+    <a href="{{ path('app_formquestions_edit', {'id': formquestion.id}) }}">edit</a>
+
+    {{ include('formquestions/_delete_form.html.twig') }}
+{% endblock %}

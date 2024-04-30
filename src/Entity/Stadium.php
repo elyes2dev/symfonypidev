@@ -18,32 +18,36 @@ class Stadium
 
     #[ORM\Column]
     #[Assert\Positive]
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 0, max: 200)] // Example: Width must be between 0 and 100
     private ?float $height;
 
     #[ORM\Column]
     #[Assert\Positive]
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 0, max: 200)] // Example: Width must be between 0 and 100
     private ?float $width;
 
     #[ORM\Column]
     #[Assert\Positive]
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 0, max: 1000)] // Example: Price must be between 0 and 1000
     private ?int $price;
 
-    #[ORM\Column(type:"float")]
-    #[Assert\Positive]
+    #[ORM\Column(type:"float",nullable:true)]
     private ?float $rate;
 
-    #[ORM\Column]
-    #[Assert\Positive]
+    #[ORM\Column(nullable:true)]
     private ?int $maintenance;
     
     #[ORM\ManyToOne(targetEntity: Club::class, inversedBy: 'stadiums')]
     #[ORM\JoinColumn(name: "idClub", referencedColumnName: "id")]
     private ?Club $idclub;
 
-    #[ORM\OneToMany(mappedBy: 'refstadium', targetEntity: Reservation::class)]
+    #[ORM\OneToMany(mappedBy: 'refstadium', targetEntity: Reservation::class, cascade: ['remove'])]
     private Collection $reservations;
 
-    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'refstadium')]
+    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'refstadium', cascade: ["remove"])]
     #[ORM\JoinTable(name:"imagestadium")]
     #[ORM\JoinColumn(name:"refStadium", referencedColumnName:"reference")]
     #[ORM\InverseJoinColumn(name:"idImage", referencedColumnName:"id")]
@@ -51,7 +55,19 @@ class Stadium
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'refstadium')]
     private Collection $iduser;
-    
+
+      // Transient property to handle file uploads in the form
+      private ?array $images;
+
+      public function getImages(): ?array
+      {
+          return $this->images;
+      }
+  
+      public function setImages(?array $images): void
+      {
+          $this->images = $images;
+      }
 
     /**
      * Constructor
@@ -231,5 +247,7 @@ class Stadium
 
         return $this;
     }
+
+    
 
 }

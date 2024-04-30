@@ -37,6 +37,9 @@ class Image
     #[ORM\ManyToMany(targetEntity: Stadium::class, mappedBy: 'idimage')]
     private Collection $refstadium;
 
+    // Add this property for file uploads
+    private $imageFile;
+
     /**
      * Constructor
      */
@@ -46,6 +49,20 @@ class Image
         $this->idclub = new \Doctrine\Common\Collections\ArrayCollection();
         $this->idevent = new \Doctrine\Common\Collections\ArrayCollection();
         $this->refstadium = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    
+    // Add getter and setter for imageFile
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile($imageFile)
+    {
+        $this->imageFile = $imageFile;
+
+        return $this;
     }
 
     public function getId(): ?int
@@ -194,6 +211,17 @@ class Image
             $refstadium->removeIdimage($this);
         }
 
+        return $this;
+    }
+    
+    // Setter for stadium
+    public function setStadium(?Stadium $stadium): self
+    {
+        // You can add custom logic here if needed
+        // For example, perform some actions based on the new value of $stadium
+
+        // If you don't need to do anything special in the setter,
+        // you can simply return $this
         return $this;
     }
 

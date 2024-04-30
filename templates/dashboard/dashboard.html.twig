@@ -1,9 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block body %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatchMate</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('Images/Ball.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -81,90 +81,94 @@
         }
 
         header {
-            background-color: #fff;
-            color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .club-buttons {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            z-index: 1;
-        }
-/* Adjust margin of other <li> elements when hovering over "Club" */
-   /* Adjust margin of other <li> elements when hovering over any <li> in the sidebar */
-.sidebar li:hover ~ li {
-    margin-top: 35px; /* Adjust the margin as needed */
-}
+        background-color: #fff;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000; /* Ensure it's above other content */
+    }
+            .club-buttons {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border-radius: 5px;
+                z-index: 1;
+            }
+    /* Adjust margin of other <li> elements when hovering over "Club" */
+    /* Adjust margin of other <li> elements when hovering over any <li> in the sidebar */
+    .sidebar li:hover ~ li {
+        margin-top: 35px; /* Adjust the margin as needed */
+    }
 
-    
+        
 
-.sidebar {
-    width: 220px; /* Adjust width as needed */
-    height: calc(100vh - 100px); /* Calculate height to fit the viewport */
-    padding: 10px; /* Reduce padding */
-    font-family: 'Segoe UI', sans-serif;
-    position: fixed;
-    top: 100px; /* Adjust top position to accommodate the header */
-    overflow-y: auto;
-    background-color: #fff;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .sidebar {
+        width: 220px; /* Adjust width as needed */
+        height: calc(100vh - 100px); /* Calculate height to fit the viewport */
+        padding: 10px; /* Reduce padding */
+        font-family: 'Segoe UI', sans-serif;
+        position: fixed;
+        top: 100px; /* Adjust top position to accommodate the header */
+        overflow-y: auto;
+        background-color: #fff;
+        color: #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-.sidebar ul {
-    margin: 0;
-    padding: 0;
-}
+    .sidebar ul {
+        margin: 0;
+        padding: 0;
+    }
 
-.sidebar ul a {
-    display: block;
-    padding: 20px;
-    margin: -1000px ;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    color: #333; /* Text color */
-    text-decoration: none;
-    font-family: 'Roboto', sans-serif; /* Specify the desired font */
-}
+    .sidebar ul a {
+        display: block;
+        padding: 20px;
+        margin: -1000px ;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        color: #333; /* Text color */
+        text-decoration: none;
+        font-family: 'Roboto', sans-serif; /* Specify the desired font */
+    }
 
-.sidebar ul a:hover {
-    background-color: #28b463; /* Background color on hover */
-    color: #fff; /* Text color on hover */
-}
+    .sidebar ul a:hover {
+        background-color: #28b463; /* Background color on hover */
+        color: #fff; /* Text color on hover */
+    }
 
 
-.sidebar a {
-    display: block;
-    padding: 10px 15px; /* Reduce padding */
-    margin: 5px 0; /* Reduce margin */
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    color: #333; /* Text color */
-    text-decoration: none;
-}
+    .sidebar a {
+        display: block;
+        padding: 10px 15px; /* Reduce padding */
+        margin: 5px 0; /* Reduce margin */
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        color: #333; /* Text color */
+        text-decoration: none;
+    }
 
-.sidebar a:hover {
-    background-color: #28b463; /* Background color on hover */
-    color: #fff; /* Text color on hover */
-}
-.sidebar a.active {
-    background-color: #28b463;
-    color: #fff;
-}
+    .sidebar a:hover {
+        background-color: #28b463; /* Background color on hover */
+        color: #fff; /* Text color on hover */
+    }
+    .sidebar a.active {
+        background-color: #28b463;
+        color: #fff;
+    }
 
-.sidebar-divider {
-    border-top: 1px solid #ccc; /* Change color and thickness as needed */
-    margin: 10px 0; /* Reduce spacing above and below the line */
-}
+    .sidebar-divider {
+        border-top: 1px solid #ccc; /* Change color and thickness as needed */
+        margin: 10px 0; /* Reduce spacing above and below the line */
+    }
        
 
         .logo {
@@ -198,20 +202,25 @@
         }
 
         .content {
-            flex: 1;
-            padding: 20px;
-            margin-top: 20px;
-        }
+        flex: 1;
+        padding: 20px;
+        margin-top: 100px; /* Adjusted margin-top to make space for the header */
+        margin-left: 200px; /* Adjusted margin-left to make space for the sidebar */
+        display: flex;
+        flex-wrap: wrap; /* Allow content to wrap to the next line if needed */
+        justify-content: space-between;
+    }
+            
         .content {
-    display: flex;
-    flex-direction: column;
-    margin-left: 260px; /* Adjust the value based on the width of the sidebar */
-}
+        display: flex;
+        flex-direction: column;
+        margin-left: 260px; /* Adjust the value based on the width of the sidebar */
+    }
 
-/* Ensure content starts from the right of the sidebar */
-.content > * {
-    margin-left: auto;
-}
+    /* Ensure content starts from the right of the sidebar */
+    .content > * {
+        margin-left: auto;
+    }
 
         .dark-mode-toggle {
             background-color: transparent; /* Remove background color */
@@ -243,79 +252,41 @@
         }
 
        .profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px; /* Reduce margin */
-}
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px; /* Reduce margin */
+    }
 
-.profile-pic {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: #ccc;
-    margin-bottom: 5px; /* Reduce margin */
-    background-image: url('https://via.placeholder.com/80');
-    background-size: cover;
-}
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #ccc;
+        margin-bottom: 5px; /* Reduce margin */
+        background-image: url('https://via.placeholder.com/80');
+        background-size: cover;
+    }
 
-.profile-name {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 3px; /* Reduce margin */
-}
+    .profile-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 3px; /* Reduce margin */
+    }
 
-.profile-profession {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 10px; /* Reduce margin */
-}
+    .profile-profession {
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 10px; /* Reduce margin */
+    }
 
         
 
 
-        #intro-animation {
-            position: fixed;
-            top: 50%;
-            left:50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #000; /* Change text color */
-            font-family: 'Roboto', sans-serif;
-            font-size: 48px;
-            opacity: 0; /* Initially hidden */
-            animation: fadeIn 2s ease forwards; /* Animation for fade-in */
-        }
+    
         
-        /* Keyframes for fade-in animation */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        
-        /* Add keyframes for letter drop animation */
-        @keyframes dropIn {
-            0% { transform: translateY(-100px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        
-        /* Style for the animated text */
-        .animated-text {
-            display: inline-block;
-        }
-        
-        /* Style for the animated letter */
-        .animated-letter {
-            display: inline-block;
-            opacity: 0;
-        }
-        
-        /* Style for the tagline */
-        .tagline {
-            font-size: 18px;
-            margin-top: 10px;
-        }
+      
         /* Style for the horizontal line */
 .sidebar-divider {
     border-top: 1px solid #ccc; /* Change color and thickness as needed */
@@ -423,132 +394,115 @@
         }
         body.dark-mode .sidebar ul a {
     color: #fff; /* Set text color to white */
-}
+    }
 
-        .sidebar ul a {
-    display: block;
-    padding: 20px;
-    margin: 10px 0;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    color: #333; /* Text color */
-    text-decoration: none;
-}
 
-.sidebar ul a:hover {
-    background-color: #28b463; /* Background color on hover */
-    color: #fff; /* Text color on hover */
-}
+            .sidebar ul a {
+        display: block;
+        padding: 20px;
+        margin: 10px 0;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        color: #333; /* Text color */
+        text-decoration: none;
+    }
 
-.sidebar ul a i {
-    margin-right: 10px;
-}
+    .sidebar ul a:hover {
+        background-color: #28b463; /* Background color on hover */
+        color: #fff; /* Text color on hover */
+    }
 
-/* Add a special style for the "Home" link */
-.sidebar ul a.home {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a i {
+        margin-right: 10px;
+    }
 
-.sidebar ul a.home:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Dashboard {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    /* Add a special style for the "Home" link */
+    .sidebar ul a.home {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Dashboard:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.club {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.home:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Dashboard {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.club:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Stadium {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.Dashboard:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.club {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Stadium:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Tournaments {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.club:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Stadium {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Tournaments:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Calendar {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.Stadium:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Tournaments {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Calendar:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Profile {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.Tournaments:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Calendar {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Profile:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Setting {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.Calendar:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Profile {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Setting:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
-.sidebar ul a.Logout {
-    font-weight: bold; /* Make the font bold */
-    color: #28b463; /* Text color for the home link */
-}
+    .sidebar ul a.Profile:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Setting {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
 
-.sidebar ul a.Logout:hover {
-    background-color: transparent; /* Remove background color on hover */
-    color: #28b463; /* Text color on hover */
-}
+    .sidebar ul a.Setting:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
+    .sidebar ul a.Logout {
+        font-weight: bold; /* Make the font bold */
+        color: #28b463; /* Text color for the home link */
+    }
+
+    .sidebar ul a.Logout:hover {
+        background-color: transparent; /* Remove background color on hover */
+        color: #28b463; /* Text color on hover */
+    }
     </style>
 </head>
 <body>
     <!-- Introductory animation -->
-    <div id="intro-animation">
-        <div class="animated-text">
-            <span class="animated-letter" style="color: #28b463;">M</span>
-            <span class="animated-letter">a</span>
-            <span class="animated-letter">t</span>
-            <span class="animated-letter">c</span>
-            <span class="animated-letter">h</span>
-            <span class="animated-letter" style="color: #28b463;">M</span>
-            <span class="animated-letter">a</span>
-            <span class="animated-letter">t</span>
-            <span class="animated-letter">e</span>
-        </div>
-        <div class="tagline">Your place to play</div>
-        <div class="animated-points">
-            <span class="point">&#8226;</span> <!-- First point -->
-            <span class="point">&#8226;</span> <!-- Second point -->
-            <span class="point">&#8226;</span> <!-- Third point -->
-        </div>
-    </div>
+
 
     <header style="display: none;">
         <div class="logo">
@@ -562,7 +516,7 @@
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
     </header>
 
-    <div class="sidebar" style="display: none;">
+    <div class="sidebar" style="display: none; width: 180px;">
         <div class="profile">
             <div class="profile-pic"></div>
             <div class="profile-name">{{ "Foulen Ben Foulen " }}</div> {# Assuming you want to display the current user's username #}
@@ -571,17 +525,20 @@
         <ul>
             <a href="/"><i class="fas fa-home"></i> Home</a>
 
-            <a href="#">
-                  <i class="fas fa-building"></i>  Club
-                <!-- Buttons container -->
-            </a>
+            <a href="/club"><i class="fas fa-building"></i>  Club </a>
 
-            <a href="/ShowEvent">
-                <i class="fas fa-trophy"></i> Events
-                <!-- Buttons container -->
-              
-            </a> <!-- Changed icon for tournaments -->
-            <a href="#"><i class="far fa-calendar-alt"></i> Calendar</a>
+            <a href="/ShowEvent"><i class="fas fa-trophy"></i> Events </a>
+            
+            {# <a href="/scheduele/{stadiumId}"><i class="far fa-calendar-alt"></i> Calendar</a> #}
+            
+            {# <a href="/stade"><i class="fas fa-futbol"> Stadium</i></a>
+            
+            <a href="/calendar"><i class="fas fa-book"> Reservations</i></a> #}
+            
+            <a href="/feedback"><i class="fas fa-comment"> Feedback</i></a>
+
+            <!-- For a stadium, using a soccer ball icon as a substitute -->
+
 
             <a href="#"><i class="fas fa-pen"></i> Claim</a>
 
@@ -596,7 +553,9 @@
     <!-- **************************************Middle content***************************  -->
 
     <div class="content" style="display: none;">
-        <h1>Content</h1>
+        {% block content %}
+        
+        {% endblock %}
     </div>
 
     <script>
@@ -612,19 +571,13 @@
 
         // Function to show header and sidebar after animation
         setTimeout(function() {
-            document.getElementById('intro-animation').style.display = 'none';
             document.querySelector('header').style.display = 'flex';
             document.querySelector('.sidebar').style.display = 'block';
             document.querySelector('.content').style.display = 'block';
-        }, 5000); // Adjust the duration here (in milliseconds)
+        }, 10); // Adjust the duration here (in milliseconds)
 
-        // Animate the letters one by one
-        var animatedLetters = document.querySelectorAll('.animated-letter');
-        animatedLetters.forEach(function(letter, index) {
-            setTimeout(function() {
-                letter.style.opacity = '1';
-            }, index * 100); // Adjust delay between letters (in milliseconds)
-        });
+     
     </script>
 </body>
 </html>
+{% endblock %}
