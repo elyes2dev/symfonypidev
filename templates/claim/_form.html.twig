@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+<style>
+
+
+/* Styles pour les éléments de formulaire */
+    .form-label {
+        font-weight: bold; /* Texte en gras */
+        margin-bottom: 5px; /* Espacement en bas */
+    }
+
+    .form-input {
+        width: 100%; /* Largeur pleine */
+        padding: 10px; /* Espacement intérieur */
+        border: 1px solid #ccc; /* Bordure grise */
+        border-radius: 5px; /* Coins arrondis */
+        margin-bottom: 15px; /* Espacement en bas */
+    }
+
+    .select-input {
+        width: 100%; /* Largeur pleine */
+        padding: 10px; /* Espacement intérieur */
+        border: 1px solid #ccc; /* Bordure grise */
+        border-radius: 5px; /* Coins arrondis */
+        margin-bottom: 15px; /* Espacement en bas */
+    }
+
+    .radio-buttons input[type="radio"] {
+        margin-right: 10px; /* Espacement à droite */
+    }
+
+    .radio-buttons label {
+        margin-right: 20px; /* Espacement à droite */
+    }
+
+    .form-submit {
+        background-color: #32A071; /* Couleur de fond */
+        color: white; /* Couleur de texte */
+        border: none; /* Pas de bordure */
+        padding: 10px 20px; /* Espacement intérieur */
+        border-radius: 5px; /* Coins arrondis */
+        cursor: pointer; /* Curseur pointeur */
+        transition: background-color 0.3s ease; /* Transition fluide */
+    }
+
+    .form-submit:hover {
+        background-color: #1e6040; /* Couleur de fond au survol */
+    }
+
+  
+    .icon-link {
+        color: #888888; /* Couleur gris */
+        margin-right: 5px; /* Espacement à droite */
+        font-size: 40px; /* Taille de police */
+        text-decoration: none; /* Pas de soulignement */
+    }
+    /* Style pour le message d'erreur du champ "Type" */
+.error-message {
+    color: red; /* Couleur du texte en rouge */
+    font-size: 14px; /* Taille de la police */
+    margin-top: 5px; /* Espacement en haut */
+}
+
+
+</style>
+    
+    <div class="new-claim-container">
+       
+
+    {{ form_start(form) }}
+
+    {# Afficher les erreurs globales du formulaire #}
+    {{ form_errors(form) }}
+
+    <div class="new-claim-container">
+        <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            {{ form_widget(form.description, {'attr': {'class': 'form-input'}}) }}
+            {# Afficher les erreurs spécifiques au champ description #}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="form-group">
+            <label for="type" class="form-label">Type   </label>
+            {# Afficher les boutons radio #}
+            {% for radio in form.type %}
+                {{ form_label(radio) }}
+                {{ form_widget(radio) }}
+            {% endfor %}
+            {# Afficher les erreurs spécifiques au champ type #}
+            {{ form_errors(form.type) }}
+        </div>
+
+        <div class="form-group">
+            <label for="idclub" class="form-label">Club</label>
+            {{ form_widget(form.idclub, {'attr': {'class': 'select-input'}}) }}
+            {# Afficher les erreurs spécifiques au champ idclub #}
+            {{ form_errors(form.idclub) }}
+        </div>
+
+        <div class="form-group">
+            <label for="image" class="form-label">Image</label>
+            {{ form_widget(form.image, {'attr': {'class': 'form-input'}}) }}
+            {# Afficher les erreurs spécifiques au champ image #}
+            {{ form_errors(form.image) }}
+        </div>
+<div class="g-recaptcha" data-sitekey="6LcuH8opAAAAALil3qfLvYHCvrHEakaOrWGDkHjN"></div>
+                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+        <button type="submit" class="form-submit">{{ button_label|default('Save') }}</button>
+    </div>
+
+    {{ form_end(form) }}
+
+<a href="{{ path('app_claim_index') }}" class="icon-link">
+    <i class="fas fa-arrow-left"></i></a>
+
+
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('Claim/style.css') }}">
+    {% endblock %}
+{% endblock %}
+

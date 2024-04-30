@@ -1,0 +1,220 @@
+{% extends 'home/home.html.twig' %}
+
+{% block m %}
+    
+{% endblock %}
+{% block partners %}
+    
+{% endblock %}
+
+{% block t %}
+    
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-#########" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<br><br><br><br><br><br><br>
+<div class="stadiums-scroll-container">
+    <div class="stadiums-container">
+        {% for stadium in stadiums %}
+            <div class="stadium-card" data-stadium-id="{{ stadium.reference }}">
+                <div class="stadium-header">
+                    {% for image in stadium.idimage %}
+                        <img src="{{ asset(image.url) }}" alt="Stadium Image">
+                    {% endfor %}
+                </div>
+                <div class="stadium-body">
+                    <h3><i class="fas fa-building" style="color: blue;"></i> Club: {{ stadium.idclub.name }}</h3>
+                    <p><i class="fas fa-ruler-vertical" style="color: green;"></i> Height: {{ stadium.height }}</p>
+                    <p><i class="fas fa-ruler-horizontal" style="color: red;"></i> Width: {{ stadium.width }}</p>
+                    <p><i class="fas fa-money-bill-wave" style="color: orange;"></i> Price: {{ stadium.price }}</p>
+                    <!-- Access club data -->
+                    <p><i class="fas fa-map-marked-alt" style="color: purple;"></i> Governorate: {{ stadium.idclub.governorate }}</p>
+                    <p><i class="fas fa-city" style="color: teal;"></i> City: {{ stadium.idclub.city }}</p>
+                </div>
+                <div class="book-now-button">
+                    <a href="{{ path('book', {'stadiumId': stadium.reference}) }}" class="book-now-link">Book Now</a>
+                </div>
+                <div class="view-details-button">
+                    <a href="#" class="view-details-link">View Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="stadium-details-overlay" style="display: none;">
+    <div id="stadium-details">
+        <!-- Details here -->
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const viewDetailsButtons = document.querySelectorAll('.view-details-link');
+    const stadiumDetailsOverlay = document.getElementById('stadium-details-overlay');
+    const stadiumDetails = document.getElementById('stadium-details');
+
+    viewDetailsButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const stadiumCard = this.closest('.stadium-card');
+            const refStadium = stadiumCard.dataset.stadiumId;
+            const price = stadiumCard.querySelector('.stadium-body p:nth-child(4)').textContent;
+            const stadiumDetailsHtml = `<h2>Stadium: ${refStadium}</h2><p>Price: ${price}</p>`;
+            stadiumDetails.innerHTML = stadiumDetailsHtml;
+            stadiumDetailsOverlay.style.display = 'block';
+        });
+    });
+
+    // Close overlay when clicking outside the details
+    stadiumDetailsOverlay.addEventListener('click', function(event) {
+        if (event.target === stadiumDetailsOverlay) {
+            stadiumDetailsOverlay.style.display = 'none';
+        }
+    });
+});
+</script>
+
+<style>
+/* Stadium scroll container */
+.stadiums-scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* Stadium card container */
+.stadiums-container {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px; /* Adjust as needed */
+}
+
+/* Stadium card */
+.stadium-card {
+    position: relative; /* Required for absolute positioning of images */
+    background-color: #222;
+    color: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+    width: 300px;
+    margin-right: 20px; /* Adjust spacing between cards */
+    margin-bottom: 20px; /* Add margin to the bottom for distance */
+    padding: 20px; /* Add padding inside the card */
+}
+
+/* Stadium card header */
+.stadium-header {
+    position: relative; /* Updated to relative */
+    height: 200px; /* Set a fixed height for consistent size */
+    overflow: hidden; /* Hide overflow of images */
+    background-color: #333;
+    border-bottom: 1px solid #444;
+}
+
+/* Stadium card header image */
+.stadium-header img {
+    max-width: 100%; /* Ensure images don't exceed container width */
+    max-height: 100%; /* Ensure images don't exceed container height */
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto; /* Center the image */
+}
+
+
+/* Stadium card body */
+.stadium-body {
+    padding: 20px;
+}
+
+/* Stadium card title */
+.stadium-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Hide all images except the first one initially */
+.stadium-header img:not(:first-child) {
+    display: none;
+}
+
+/* Club name */
+.stadium-body h3 {
+    margin-top: 10px;
+}
+
+/* Club data */
+.stadium-body p {
+    margin: 5px 0;
+}
+
+/* Book Now Button */
+.book-now-button {
+    position: absolute;
+    bottom: 30px; /* Adjust the distance from the bottom */
+    right: 10px;
+}
+
+/* Book Now Link */
+.book-now-link {
+    background-color: #28a745; /* Greenish color */
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.book-now-link:hover {
+    background-color: #218838; /* Darker shade of green on hover */
+}
+
+/* View Details Button */
+.view-details-button {
+    position: absolute;
+    bottom: 80px; /* Adjust the distance from the bottom */
+    right: 10px;
+}
+
+/* View Details Link */
+.view-details-link {
+    background-color: #007bff; /* Blue color */
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.view-details-link:hover {
+    background-color: #0056b3; /* Darker shade of blue on hover */
+}
+
+/* Stadium details overlay */
+#stadium-details-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px; /* Adjust width as needed */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto; /* Enable scrolling */
+}
+
+#stadium-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+</style>
+{% block footer %}
+    
+{% endblock %}
+{% endblock %}

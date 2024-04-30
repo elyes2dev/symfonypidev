@@ -1,0 +1,146 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .half-card {
+            width: 60%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 20px auto; /* Centrer la carte et ajouter un espace autour */
+            overflow: hidden; /* Assurer que la bordure est correctement affichée */
+        }
+
+        .card-body {
+            padding: 20px;
+            background-color: #f9f9f9; /* Couleur de fond pour les détails de la réclamation */
+        }
+
+        .icon-link {
+            color: #888888;
+            margin-right: 10px;
+            font-size: 44px;
+        }
+
+         .left-section,
+        .right-section {
+            width: 50%; /* Changer la largeur des sections pour une présentation équilibrée */
+            float: left;
+            padding: 10px; /* Ajouter un peu d'espace entre les sections */
+        }
+
+         .image-wrapper {
+            width: 90%; /* Ajuster la largeur pour remplir la moitié de la carte */
+            height: 300px; /* Hauteur souhaitée pour l'image carrée */
+            overflow: hidden; /* Masquer le contenu débordant */
+            border-radius: 8px; /* Coins arrondis */
+            margin-bottom: 20px; /* Ajouter un espace sous l'image */
+        }
+
+        .image-wrapper img {
+            width: 100%; /* Assurer que l'image occupe toute la largeur du conteneur */
+            height: auto; /* Maintenir le ratio hauteur/largeur */
+            border-radius: 8px; /* Coins arrondis */
+        }
+
+        /* Styliser les détails de la réclamation */
+        .claim-details {
+            margin-top: 30px; /* Ajouter une marge en haut pour déplacer les détails vers le bas */
+        }
+
+        .claim-details p {
+            margin: 8px 0; /* Ajuster l'espacement entre les éléments */
+            font-size: 16px; /* Taille de la police */
+        }
+
+        .claim-details strong {
+            color: #32A071; /* Couleur verte */
+        }
+
+        /* CSS Styles */
+
+.response-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.response-field {
+    position: relative;
+    background-color: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.response-field input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    font-size: 16px;
+    outline: none;
+}
+
+.response-button {
+    float: right; /* Aligner le bouton à droite */
+    width: 20%; /* Définir la largeur du bouton */
+    margin-top: -33px; /* Ajuster la marge vers le haut */
+}
+.arrow-up {
+    position: absolute;
+    right: 25px;
+    top: 70%;
+    transform: translateY(-60%);
+    color: #888888;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+    </style>
+    <div class="half-card">
+        <div class="card-body">
+            <div class="left-section">
+                <div class="image-wrapper">
+                    {% if claim.image %}
+                        <img src="{{ asset('Images/' ~ claim.image) }}" alt="Claim Image">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="claim-details">
+                    <p><strong>Date:</strong> {{ claim.date ? claim.date|date('Y-m-d') : '' }}</p>
+                    <p><strong>Description:</strong> {{ claim.description }}</p>
+                   <p><strong>
+                    
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+       
+    </div>
+
+      
+        {{ form_start(form) }}
+       <div class="response-field">
+        <div class="response-input">
+            {{ form_widget(form.response, {'attr': {'placeholder': 'Enter your response here...'}}) }}
+        </div>
+        <div class="response-button">
+            <button type="submit" class="btn-response">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+        </div>
+        
+    </div>
+         {{ form_end(form) }}
+         </br>
+   
+<a href="{{ path('app_claim_claims') }}" class="icon-link">
+    <i class="fas fa-arrow-left"></i></a>
+{% endblock %}
+
+

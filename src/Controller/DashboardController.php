@@ -22,4 +22,14 @@ class DashboardController extends AbstractController
             'controller_name' => 'DashboardController',
         ]);
     }
+    #[Route('/claim', name: 'app_claim')]
+    public function claim(): Response
+    {
+        return $this->render('claim.html.twig');
+    }
+    #[Route('/reservation', name: 'app_calendar')]
+    public function calendar(): Response
+    {
+        return $this->render('reservation/index.html.twig');
+    }
 }

@@ -1,0 +1,50 @@
+{% block content %}
+    <title>Statistiques des réclamations</title>
+    <!-- Inclure les bibliothèques Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <canvas id="claimChart" width="300" height="300"></canvas>
+
+    <style>
+        /* Style for the button */
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <script>
+        // Récupérer les données des réclamations depuis Symfony
+        const claimsData = {
+            labels: ['Site', 'Store', 'Reservation'],
+            datasets: [{
+                label: 'Statistiques des réclamations',
+                data: [6, 2, 2], // Exemple de données
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Créer un graphique à secteurs (pie chart)
+        const ctx = document.getElementById('claimChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: claimsData
+        });
+    </script>
+    <div style="margin-top: 20px;">
+        <a href="{{ path('app_claim_claims') }}" class="btn">Retourner à la page des réclamations</a>
+    </div>
+{% endblock %}

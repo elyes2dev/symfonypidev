@@ -1,0 +1,25 @@
+{% extends 'home/index.html.twig' %}
+
+{% block m %}
+{% endblock %}
+{% block stylesheets %}
+{{parent()}}
+{% endblock %}
+{% block partners %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+{% block title %}Edit Claim{% endblock %}
+
+{% block content %}
+    <h1 class="edit-claim-title">Edit your Claim</h1> <!-- Modifier le titre avec la classe edit-claim-title -->
+   
+    <link rel="stylesheet" href="{{ asset('Claim/style.css') }}">
+    
+    {{ include('claim/_form.html.twig', {'button_label': 'Update'}) }}
+
+  
+
+    {{ include('claim/_delete_form.html.twig') }}
+{% endblock %}

@@ -50,7 +50,7 @@ class Reservation
     /**
      * Constructor
      */
-    public function __construct()
+   public function __construct()
     {
         $this->idpayment = new ArrayCollection();
     }

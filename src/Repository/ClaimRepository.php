@@ -14,5 +14,19 @@ class ClaimRepository extends ServiceEntityRepository
         parent::__construct($registry, Claim::class);
     }
 
-    // You can add custom repository methods here
+    public function countClaimsByType(): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c.type, COUNT(c.id) as claimCount')
+            ->groupBy('c.type');
+
+        $results = $qb->getQuery()->getResult();
+
+        $claimsByType = [];
+        foreach ($results as $result) {
+            $claimsByType[$result['type']] = $result['claimCount'];
+        }
+
+        return $claimsByType;
+    }
 }

@@ -1,0 +1,24 @@
+{% extends 'home/index.html.twig' %}
+
+
+{% block m %}
+{% endblock %}
+{% block stylesheets %}
+{{parent()}}
+{% endblock %}
+{% block partners %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+
+
+{% block title %}New Claim{% endblock %}
+
+
+{% block content %}
+    <h1 class="new-claim-title">Create new Claim</h1> <!-- Modifier le titre avec la classe new-claim-title -->
+     {{ include('claim/_form.html.twig') }}
+
+    
+{% endblock %}

@@ -1,0 +1,490 @@
+{% extends 'home/home.html.twig' %}
+
+{% block m %}
+{% endblock %}
+{% block stylesheets %}
+{% endblock %}
+
+
+
+{% block t %}
+
+<h1 class="claim-index-title">Claims</h1>
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+<style type="text/css">
+    body {
+        margin-top: 20px;
+        background-color: #f8f9fa; /* Light gray background */
+    }
+
+    /* Animation for the title */
+    .claim-index-title {
+        text-align: center;
+        font-size: 46px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #333333, #32A071, #d8d8d8);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: waveText 2s infinite linear alternate;
+    }
+
+    /* Keyframes for waveText animation */
+    @keyframes waveText {
+        0% {
+            background-position: 0% center;
+        }
+        100% {
+            background-position: 100% center;
+        }
+    }
+
+    /* Container for claim cards */
+
+.claim-slider {
+  position: center;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 auto; /* Centre horizontalement */
+    padding: 20px;
+    width: 200%; /* Largeur du slider */
+    max-width: 1400px; /* Largeur maximale */
+    border-radius: 20px; /* Coins arrondis */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Ombre */
+    background-color: #fff; /* Fond blanc */
+}
+
+    /* Individual claim card */
+    .claim-card {
+        flex: 0 0 auto; /* Allow cards to flex based on content */
+        margin-right: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        padding: 10px; /* Adjust padding as needed */
+        width: 350px; /* Set the width of the card */
+        height: 100px; /* Set the height of the card */
+    }
+
+    /* Hover effect for claim card */
+    .claim-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    }
+
+
+/* Individual claim card */
+.claim-card {
+    flex: 0 0 auto; /* Allow cards to flex based on content */
+    margin-right: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 10px; /* Adjust padding as needed */
+    width: 350px; /* Set the width of the card */
+    height: 400px; /* Set the height of the card */
+    display: flex; /* Enable flexbox for vertical alignment */
+    flex-direction: column; /* Align items vertically */
+}
+
+/* Hover effect for claim card */
+.claim-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Claim card details */
+.claim-details {
+    padding: 5px;
+    
+}
+/* Style for user info */
+.user-info {
+    margin-top: auto; /* Push user info to the bottom */
+    float: left; /* Float user info to the left */
+}
+
+    /* Scroll buttons */
+    .scroll-left, .scroll-right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 1;
+       
+    }
+
+    .scroll-left {
+        left: 20px;
+    }
+
+    .scroll-right {
+        right: 60px;
+          
+    }
+
+    /* Scroll bar styles */
+    .claim-slider::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .claim-slider::-webkit-scrollbar-thumb {
+        background-color: #32A071; /* Scroll thumb color */
+        border-radius: 10px;
+    }
+
+    .claim-slider::-webkit-scrollbar-track {
+        background-color: #d8d8d8; /* Scroll track color */
+        border-radius: 10px;
+    }
+
+
+   .chat-message {
+    position: relative;
+    background-color: #f5f5f5; /* Light gray background */
+    padding: 10px 15px;
+    border-radius: 20px; /* Rounded corners */
+    width: 90%; /* Set width to 90% */
+    height: 70%; /* Set height to 70% */
+    margin: auto; /* Center the message horizontally */
+    overflow-y: auto; /* Enable vertical scrolling */
+    word-wrap: break-word; /* Ensure long text wraps within the container */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.chat-message::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar width */
+    background: transparent; /* Make the scrollbar track transparent */
+}
+
+/* Triangle shape for chat message */
+.chat-message::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: calc(50% - 10px); /* Center the triangle horizontally */
+    width: 0;
+    height: 0;
+    border-top: 10px solid #f5f5f5; /* Same as background color */
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+}
+
+
+    /* Style for the user image */
+    .quote-author-img img {
+        width: 60px; /* Adjust as needed */
+        height: 60px; /* Adjust as needed */
+        border-radius: 50%;
+        margin-right: 10px; /* Add space between image and user info */
+        float: left; /* Float the image to the left */
+    }
+
+    
+.claim-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align icons to the right */
+    margin-top: auto; /* Push icons to the bottom */
+}
+  .claim-actions img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+/* Button styling */
+/* Style du bouton "Add Claim" */
+ .add-claim-button {
+      background-color: #32A071;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none; /* Supprimer le soulignement */
+      position: fixed; /* Position fixe par rapport à la fenêtre du navigateur */
+      bottom: 20px; /* Espacement par rapport au bas */
+      left: 80%; /* Centrage horizontal */
+      transform: translateX(-50%);
+      transform: translateY(-1200%); /* Centrage horizontal */
+    }
+
+    .add-claim-button:hover {
+      background-color: #1e6040;
+    }
+
+    /* Texte et icône à l'intérieur du bouton */
+    .button-text {
+      margin-right: 10px;
+    }
+
+    .button-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Animation pour l'effet de survol du bouton */
+    .add-claim-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      text-decoration: none;
+      width: 300%;
+      height: 300%;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transition: width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+    }
+
+    .add-claim-button:hover::after {
+      width: 0;
+      height: 0;
+      top: 50%;
+      left: 50%;
+    }
+.highlighted-text {
+    color: green; /* Change the color to green or any other color you prefer */
+    font-weight: bold; /* Make the text bold */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add a slight shadow effect */
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+}
+
+.button-container > * {
+  margin-right: 20px; /* Adjust margin between elements */
+}
+
+.typeSelect {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        transition: border-color 0.3s ease;
+    }
+
+    .typeSelect:focus {
+        outline: none;
+        border-color: #66afe9;
+    }
+
+    /* Dropdown styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+}
+
+.dropdown-content ul {
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-content li {
+    padding: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd; /* Adjust hover color as needed */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #rgba(0, 0, 0, 0); /* Adjust hover color as needed */
+}
+
+/* Custom styling for dropdown arrow */
+.dropdown-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.dropdown-arrow::after {
+    content: "Types";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333; /* Adjust color as needed */
+    font-weight: bold; /* Make the text bold */
+}
+
+ 
+</style>   
+
+<body>
+
+
+
+
+<div class="button-container">
+  <!-- Button for adding claim -->
+  <div class="colored-quote-box-col">
+    <a href="{{ path('app_claim_new') }}" class="add-claim-button">
+      <span class="button-text">Add Claim</span>
+      <img src="Images/claim.gif" alt="Add Claim GIF" class="button-icon">
+    </a>
+  </div>
+
+  <!-- Dropdown list for notifications -->
+  <div id="notification-dropdown" class="dropdown">
+    <span class="dropbtn" id="notification-btn">
+      <img src="Images/notif.png" class="button-icon" style="width: 30px; height: 30px;">
+      <span id="notification-count" style="color: red;">{{ notifications|length }}</span>
+    </span>
+    <div class="dropdown-content" id="notification-list">
+      <ul>
+        {% for notification in notifications %}
+          <li><a href="#">{{ notification.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+        <div class="col-md-1">
+            <div class="dropdown">
+                <form class="filter-form" action="{{ path('app_claim_index') }}" method="GET">
+                    <div class="form-group">
+                        <select class="type-select form-control" id="typeSelect" name="type">
+                            <option value="">All</option>
+                            <option value="reservation"{% if app.request.query.get('type') == 'reservation' %} selected{% endif %}>Réservation</option>
+                            <option value="store"{% if app.request.query.get('type') == 'store' %} selected{% endif %}>Store</option>
+                            <option value="site"{% if app.request.query.get('type') == 'site' %} selected{% endif %}>Site</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+</div>
+
+
+
+
+<div class="col-md-6 margin-btm-20">
+  <div class="claim-slider">
+    {% for claim in claims %}
+      <div class="claim-card">
+        <div class="chat-message">
+          <p>{{ claim.description }}</p>
+        </div>
+        <div class="claim-details">
+          <div class="quote-author-img">
+            <img src="Images/user .png" alt="">
+          </div>
+          <p>{{ claim.iduser.firstname }}</p>
+          <p>{{ claim.date ? claim.date|date('Y-m-d') : '' }}</p>
+         {% if claim.status == 'responded' %}
+    <p class="highlighted-text">{{ claim.status }}</p>
+{% endif %}
+
+        </div>
+        <!-- Icons for actions -->
+        <div class="claim-actions">
+          <a href="{{ path('app_claim_show', {'id': claim.id}) }}" class="icon-link"><img src="Images/eye.gif" style="width: 20px; height: 20px;" ></a>
+          <a href="{{ path('app_claim_edit', {'id': claim.id}) }}" class="icon-link"><img src="Images/edit.gif" style="width: 20px; height: 20px;"></a>
+        </div>
+      </div>
+    {% endfor %}
+  
+
+
+</a>
+  <script>
+
+    // JavaScript for dynamic filtering
+            document.addEventListener('DOMContentLoaded', function() {
+                const typeSelect = document.getElementById('typeSelect');
+                typeSelect.addEventListener('change', function() {
+                    this.form.submit();
+                });
+            });
+
+</script>
+
+
+
+
+
+
+
+ <script>
+ document.addEventListener('DOMContentLoaded', function() {
+    const notificationBtn = document.getElementById('notification-btn');
+    const notificationList = document.getElementById('notification-list');
+
+    // Hide the notification list by default
+    notificationList.style.display = 'none';
+
+    // Toggle the visibility of the notification list when the icon is clicked
+    notificationBtn.addEventListener('click', function() {
+        if (notificationList.style.display === 'none') {
+            notificationList.style.display = 'block';
+        } else {
+            notificationList.style.display = 'none';
+        }
+    });
+});
+
+ 
+ </script>
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+
+
+<div class="colored-quote-box-col">
+  <a href="{{ path('app_claim_new') }}" class="add-claim-button">
+    <span class="button-text">Add Claim</span>
+    <img src="Images/claim.gif" alt="Add Claim GIF" class="button-icon">
+  </a>
+</div>
+</body>
+{% endblock %}
+{% block partners %}
+{% endblock %}
+{% block footer %}
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+
+
+{% block content %}
+    <style>
+        .content-container {
+            background-color: #f0f0f0; /* Couleur d'arrière-plan */
+            padding: 20px; /* Ajouter de l'espace intérieur */
+            border-radius: 10px; /* Coins arrondis */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+        }
+
+        /* Styles pour le tableau des réclamations */
+        table {
+            width: 100%; /* Rendre le tableau 100% de la largeur de son conteneur */
+            border-collapse: collapse; /* Fusionner les bordures de la table */
+            margin-bottom: 20px; /* Ajouter de l'espace en bas du tableau */
+        }
+
+        th, td {
+            padding: 10px; /* Ajouter de l'espace à l'intérieur des cellules */
+            text-align: left; /* Aligner le texte à gauche */
+            border-bottom: 1px solid #ddd; /* Ajouter une bordure basse à chaque ligne */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Couleur de fond pour les en-têtes */
+            font-weight: bold; /* Mettre en gras le texte des en-têtes */
+            color: #32A071;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5; /* Couleur de fond au survol des lignes */
+        }
+
+        tr.selected {
+            background-color: #f5f5f5; /* Couleur de fond lorsque sélectionné */
+            cursor: pointer; /* Curseur de la souris indiquant que la ligne est sélectionnable */
+        }
+
+        /* Styles pour le bouton de réponse */
+        .btn-response {
+            background-color: #32A071; /* Vert clair */
+            color: #fff; /* Texte blanc */
+            padding: 8px 12px; /* Espacement intérieur */
+            border: none; /* Pas de bordure */
+            border-radius: 4px; /* Coins arrondis */
+            text-decoration: none; /* Pas de soulignement */
+            font-weight: bold; /* Texte en gras */
+            transition: background-color 0.3s; /* Animation de transition */
+        }
+
+        .btn-response:hover {
+            background-color: #689f38; /* Vert plus foncé au survol */
+        }
+
+        .btn-chart {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-chart:hover {
+    background-color: #45a049;
+}
+
+    </style>
+    <div class="content-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Satisfaction</th>
+                    <th>Response</th>
+                    <th>Closure Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for claim in claims %}
+                    <tr>
+                        <td>{{ claim.id }}</td>
+                        <td>{{ claim.date ? claim.date|date('Y-m-d') : '' }}</td>
+                        <td>{{ claim.description }}</td>
+                        <td>{{ claim.type }}</td>
+                        <td>{{ claim.status }}</td>
+                        <td>{{ claim.satisfaction }}</td>
+                        <td>{{ claim.response }}</td>
+                        <td>{{ claim.closuredate ? claim.closuredate|date('Y-m-d') : '' }}</td>
+                        <td>
+                            <form action="{{ path('app_claim_delete', {'id': claim.id}) }}" method="post">
+                             <button type="submit" class="btn-icon" aria-label="Delete">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </form>
+</td>
+
+                           <td>
+                           
+                            {% if claim.status == 'ON HOLD' %}
+                                <a href="{{ path('claim_response', {'id': claim.id}) }}" class="btn btn-response">
+                                    <i class="fas fa-reply"></i>Response
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('chart_page') }}" class="btn-chart">Voir le graphique</a>
+
+{% endblock %}

@@ -15,4 +15,9 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+    #[Route('/claim', name: 'app_claim')]
+    public function claim(): Response
+    {
+        return $this->render('claim.html.twig');
+    }
 }

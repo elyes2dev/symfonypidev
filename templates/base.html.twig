@@ -1,13 +1,10 @@
 {# base.html.twig #}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}My Symfony Application{% endblock %}</title>
+    {% block base %}
     <link rel="stylesheet" href="{{ asset('styles.css') }}">
-    {% block stylesheets %}{% endblock %}
-</head>
-<body>
+     
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-wg0WoL15z1S7XjWVWUcBFEg+XbrkMWf3IK1N1gepGnbcKKWkY6JL8nY0pgOfuSkg+Dk9tq2I5q7wUG3KYpEbZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% endblock %}
     {% block body %}{% endblock %}
-</body>
-</html>

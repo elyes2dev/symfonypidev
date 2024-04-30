@@ -1,0 +1,236 @@
+{% extends 'home/home.html.twig' %}
+
+{% block m %}
+{% endblock %}
+{% block stylesheets %}
+{% endblock %}
+
+
+{% block t %}
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Styles pour les cartes */
+        .half-card {
+            width: 90%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 20px auto; /* Centrer la carte et ajouter un espace autour */
+            overflow: hidden; /* Assurer que la bordure est correctement affichée */
+        }
+
+        .card-body {
+            padding: 20px;
+            background-color: #f9f9f9; /* Couleur de fond pour les détails de la réclamation */
+        }
+
+        .icon-link {
+        color: #888888; /* Couleur gris */
+        margin-right: 5px; /* Espacement à droite */
+        font-size: 40px; /* Taille de police */
+        text-decoration: none; /* Pas de soulignement */
+        
+    }
+
+        .left-section,
+        .right-section {
+            width: 50%; /* Changer la largeur des sections pour une présentation équilibrée */
+            float: left;
+            padding: 10px; /* Ajouter un peu d'espace entre les sections */
+        }
+
+        .image-wrapper {
+            width: 100%; /* Ajuster la largeur pour remplir la moitié de la carte */
+            height: 300px; /* Hauteur souhaitée pour l'image carrée */
+            overflow: hidden; /* Masquer le contenu débordant */
+            border-radius: 8px; /* Coins arrondis */
+            margin-bottom: 20px; /* Ajouter un espace sous l'image */
+        }
+
+        .image-wrapper img {
+            width: 100%; /* Assurer que l'image occupe toute la largeur du conteneur */
+            height: auto; /* Maintenir le ratio hauteur/largeur */
+            border-radius: 8px; /* Coins arrondis */
+        }
+
+        /* Styliser les détails de la réclamation */
+        .claim-details {
+    margin-top: 30px; /* Ajouter une marge en haut pour déplacer les détails vers le bas */
+}
+
+        .claim-details p {
+            margin: 8px 0; /* Ajuster l'espacement entre les éléments */
+            font-size: 16px; /* Taille de la police */
+        }
+        .claim-details strong {
+        color: #32A071; /* Couleur verte */
+    }
+
+   .pdf-button {
+    position: fixed; /* Position fixe par rapport à la fenêtre du navigateur */
+    bottom: 20px; /* Distance du bas de la fenêtre */
+    right: 20px; /* Distance de la droite de la fenêtre */
+    background-color: green; /* Couleur de fond bleue */
+    color: #fff; /* Couleur du texte blanc */
+    border: none; /* Pas de bordure */
+    padding: 10px 20px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    text-decoration: none; /* Pas de soulignement */
+    font-size: 16px; /* Taille de la police */
+    z-index: 9999; /* Priorité d'affichage */
+}
+
+.pdf-button:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}
+.response-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.response-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.response-text {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.emoji {
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 10px;
+    position: relative;
+}
+.emoji-list {
+    display: flex;
+   /* Alignement des emojis sur la largeur de la boîte */
+}
+
+.translate-right-top {
+    position: absolute;
+    top: 320px; /* Ajustez la valeur selon vos besoins */
+    right: 110px; /* Ajustez la valeur selon vos besoins */
+}
+.emoji-text {
+    position: absolute;
+    bottom: -20px; /* Ajustement de la position verticale du texte explicatif */
+    left: 50%; /* Centrage horizontal du texte explicatif */
+    transform: translateX(-50%); /* Centrage horizontal précis */
+    white-space: nowrap; /* Empêcher le texte de se retourner à la ligne */
+    font-size: 12px; /* Taille de police du texte explicatif */
+}
+
+.emoji-tooltip {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
+    .emoji:hover + .emoji-tooltip {
+        display: block;
+    }
+</style>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const emojis = document.querySelectorAll('.emoji');
+
+        emojis.forEach(emoji => {
+            emoji.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                updateSatisfaction(value);
+            });
+        });
+
+        function updateSatisfaction(value) {
+            // Mettre à jour la valeur de satisfaction dans la page
+            const satisfactionElement = document.querySelector('.satisfaction-value');
+            satisfactionElement.textContent = value;
+
+            // Envoyer la mise à jour au serveur via une requête AJAX
+            // Vous devrez implémenter cette partie côté serveur
+            // (par exemple, en utilisant Axios ou Fetch pour envoyer les données au serveur)
+        }
+    });
+</script>
+
+
+    <div class="half-card">
+        <div class="card-body">
+            <div class="left-section">
+                <div class="image-wrapper">
+                    {% if claim.image %}
+                        <img src="{{ asset('Images/' ~ claim.image) }}" alt="Claim Image">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="claim-details">
+                   
+                    <p><strong>Date:</strong> {{ claim.date ? claim.date|date('Y-m-d') : '' }}</p>
+                    <p><strong>Description:</strong> {{ claim.description }}</p>
+                    <p><strong>Type:</strong> {{ claim.type }}</p>
+                    <p><strong>Satisfaction:</strong> {{ claim.satisfaction }}</p>
+                    <p><strong>Status:</strong> {{ claim.status }}</p>
+                    </div>
+            {% if claim.status == 'responded' %}
+              <div class="response-box">
+    <p class="response-title"><strong>Response:</strong></p>
+     <p class="response-text">{{ claim.response }}</p>
+     {% if claim.satisfaction == 'Not yet rated' %}
+       <div class="emoji-list translate-right-top">
+         <a href="{{ path('claim_update_satisfaction', {'id': claim.id, 'value': 1}) }}" class="emoji" data-value="1" title="Très mécontent">😡<span class="emoji-tooltip">Très mécontent</span></a>
+<a href="{{ path('claim_update_satisfaction', {'id': claim.id, 'value': 2}) }}" class="emoji" data-value="2" title="Mécontent">😠</a>
+<a href="{{ path('claim_update_satisfaction', {'id': claim.id, 'value': 3}) }}" class="emoji" data-value="3" title="Neutre">😐</a>
+<a href="{{ path('claim_update_satisfaction', {'id': claim.id, 'value': 4}) }}" class="emoji" data-value="4" title="Satisfait">🙂</a>
+<a href="{{ path('claim_update_satisfaction', {'id': claim.id, 'value': 5}) }}" class="emoji" data-value="5" title="Très satisfait">😊</a>
+
+    </div>
+    {% endif%}
+</div>
+
+</div>
+            {% endif %}
+                    
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<div>
+    <a href="{{ path('app_claim_index') }}" class="icon-link">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <a href="{{ path('app_claim_edit', {'id': claim.id}) }}" class="icon-link">
+        <i class="fas fa-edit"></i>
+    </a>
+    {{ include('claim/_delete_form.html.twig') }}
+
+   {# Afficher les détails de la réclamation ici #}
+
+{# Styler le bouton PDF #}
+<a href="{{ path('claim_pdf', {'id': claim.id}) }}" class="btn btn-primary pdf-button" target="_blank">
+  PDF
+</a>
+  <a href="{{ path('app_claim_index') }}" class="icon-link">
+    <i class="fas fa-arrow-left"></i></a>
+
+</div>
+{% endblock %}
+
+{% block partners %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
