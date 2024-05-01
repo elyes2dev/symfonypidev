@@ -54,6 +54,10 @@
             <a href="{{ path('app_stadium_edit', {'reference': stadium.reference}) }}" class="btn btn-secondary edit-link">
                 <i class="fas fa-edit"></i> Edit
             </a>
+              {% if stadium.maintenance == 3 %}
+<a href="#" class="btn btn-danger edit-link" onclick="alertMaintenance('{{ path('alert_maintenance', {'reference': stadium.reference}) }}')">
+            <i class="fas fa-exclamation-triangle"></i> Alert Maintenance
+        </a>            {% endif %}
         </div>
     </div>
 
@@ -156,4 +160,29 @@
             background-color: #1e7e34; /* Darker green background color on hover */
         }
     </style>
+
+    <script>
+        // Function to handle alerting maintenance
+        function alertMaintenance(url) {
+            // Send AJAX request to update maintenance status
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Maintenance status updated successfully
+                    alert('Maintenance alerted successfully.');
+                    // Refresh the page or update UI as needed
+                } else {
+                    // Error occurred
+                    alert('Error alerting maintenance. Please try again later.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 {% endblock %}

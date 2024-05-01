@@ -1,12 +1,12 @@
 framework:
     notifier:
-        chatter_transports:
         texter_transports:
+            mail: 'mailto://symfonymail022@gmail.com'  # Replace with your email address
         channel_policy:
-            # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
-            urgent: ['email']
-            high: ['email']
-            medium: ['email']
-            low: ['email']
+            # Use 'mail' for all priority levels
+            urgent: ['mail']
+            high: ['mail']
+            medium: ['mail']
+            low: ['mail']
         admin_recipients:
-            - { email: admin@example.com }
+            - { email: symfonymail022@gmail.com }  # Replace with your admin email address

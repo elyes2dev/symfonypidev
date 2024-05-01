@@ -4,11 +4,33 @@
 {% block content %}
 
 <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+         <!-- Flashy depends on jQuery -->
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <!-- Load Flashy default JavaScript -->
+        <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+        <!-- Include Flashy default partial -->
+        {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+        <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+
+
+
 <style type="text/css">
     body {
         background: #f3f3f3;
     }
-    
+           /* Override default Flashy CSS to position notifications in the center of the page */
+            .flashy {
+                position: fixed;
+                top: 30%;
+                left: 93%;
+                transform: translate(-50%, -100%);
+                z-index: 1000; /* Ensure it's above other elements */
+                width: 150px; /* Set the width of the notification */
+                height: 70px;
+                padding: 10px; /* Adjust padding as needed */
+                font-size: 14px; /* Adjust font size as needed */
+                border-radius: 5px; /* Add border radius for rounded corners */
+            }
 
     .categories ul {
         list-style: none;
@@ -350,17 +372,89 @@ select.form-control {
     max-width: 200px; /* Set maximum width */
 }
 
+/* Notification icon */
+.notification-icon {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-left: 10px; 
+    cursor: pointer;
+}
+
+/* Notifications container */
+.notifications-container {
+    position: fixed;
+    bottom: 20px; /* Adjust the distance from the bottom */
+    right: 20px; /* Adjust the distance from the right */
+    width: 300px; /* Adjust the width as needed */
+    max-height: 400px; /* Adjust the max height as needed */
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    color: #fff; /* Text color */
+    border-radius: 8px;
+    padding: 10px;
+    display: none; /* Hide by default */
+    animation: slideIn 0.5s ease-out; /* Add slide in animation */
+}
+
+/* Notification items */
+.notification-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Separator between notifications */
+    opacity: 0; /* Start with 0 opacity */
+    animation: fadeIn 0.5s forwards; /* Add fade in animation */
+}
+
+/* Remove separator from the last notification */
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+/* Animation keyframes */
+@keyframes slideIn {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+
 
     </style>
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 <div class="container bootstrap snippets bootdey">
+
+
 <h1 class="text-center section-title">
     <span class="club-heading">Current <span class="green-letter">C</span>lubs</span>
+    <img src="{{ asset('Images/notification-bell.png') }}" alt="Bell Icon" class="notification-icon" id="notification-icon">
 </h1>
 
+<!-- Add this code where you want the notifications container to appear -->
+<div class="notifications-container" id="notifications-container">
+    <h3>Notifications</h3>
+    <ul>
+        {% for notification in notifications %}
+            <li class="notification-item">{{ notification.text }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
 <hr class="green-line">
+
 </br>
 </br>
+
 <section id="portfolio" class="gray-bg padding-top-bottom">
   <div class="container bootstrap snippets bootdey">
 
@@ -430,24 +524,63 @@ select.form-control {
                         <a href="#" class="link"><i class="fa fa-stadium fa-fw"></i></a>
                     </div>
                     {% endfor %}
-                    <div class="col-md-4 col-sm-6 portfolio-item web-design apps psd">
-                        <div class="portfolio-thumb in">
-                            <a href="{{ path('app_club_new') }}" class="main-link">
-                                <div class="card add-club-card">
-                                    <div class="card-content">
-                                        <div class="image-container">
-                                            <img src="{{ asset('Images/plus.png') }}" alt="Create New Club">
-                                        </div>
-                                        <h2>Create New Club</h2>
-                                    </div>
-                                </div>
-                            </a>
+               <div class="col-md-4 col-sm-6 portfolio-item web-design apps psd">
+    <div class="portfolio-thumb in">
+        {% if hasSubscription %}
+            {# Check if the user has reached the maximum number of clubs allowed #}
+            {% if maxClubsReached %}
+               <div class="card add-club-card">
+                    <div class="card-content">
+                        <div class="image-container">
+                            <!-- Use a different image for users who reached the club limit -->
+                            <img src="{{ asset('Images/club_limit_reached.jpg') }}" alt="Club Limit Reached">
                         </div>
+                        <h2>{{ subscriptionEndDate ? 'Days Left for the Subscription: ' ~ ((subscriptionEndDate|date('U') - 'now'|date('U')) / (3600 * 24))|round }}</h2>
                     </div>
+                </div>
+            {% else %}
+                {# If the user has a subscription and hasn't reached the club limit, hide the button #}
+                            <a href="{{ path('app_club_new') }}" id="subscribe-link" class="main-link">
+
+                <div class="card add-club-card" style="">
+                    <div class="card-content">
+                        <div class="image-container">
+                            <img src="{{ asset('Images/plus.png') }}" alt="Create New Club">
+                        </div>
+                        <h2>Create New Club</h2>
+                    </div>
+                </div>
+                            </a>
+
+            {% endif %}
+        {% else %}
+            {# If the user doesn't have a subscription, show the button to create a subscription #}
+            <a href="{{ path('app_subscription_new') }}" id="subscribe-link" class="main-link">
+                <div class="card add-club-card">
+                    <div class="card-content">
+                        <div class="image-container">
+                            <!-- Use a different image for users without a subscription -->
+                            <img src="{{ asset('Images/subscribe.jpg') }}" alt="Subscribe">
+                        </div>
+                        <h2>Subscribe to Create Clubs</h2>
+                    </div>
+                </div>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
                 </div>
             </div>
         </div>
     </section>
+    {% if hasSubscription %}
+  <div class="text-center">
+    <a href="{{ path('subscription_receipt', {'id': subscription.id}) }}" class="btn btn-primary" target="_blank">Print Subscription Receipt</a>
+</div>
+
+{% endif %}
+
 </div>
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -497,7 +630,7 @@ select.form-control {
             });
         });
     });
-
+    
        // Add event listener to the search input
     document.getElementById('clubSearch').addEventListener('input', function() {
         const searchValue = this.value.toLowerCase(); // Convert input value to lowercase for case-insensitive search
@@ -512,6 +645,29 @@ select.form-control {
             }
         });
     });
+
+  document.getElementById('notification-icon').addEventListener('click', function() {
+    var container = document.getElementById('notifications-container');
+    container.classList.toggle('fade-in');
+    container.style.display = container.style.display === 'block' ? 'none' : 'block';
+
+    // Get all notification items
+    var notificationItems = document.querySelectorAll('.notification-item');
+
+    // Loop through notification items and fade them in
+    notificationItems.forEach(function(item, index) {
+        setTimeout(function() {
+            item.style.opacity = 1;
+        }, index * 300); // Delay each item by 300 milliseconds
+    });
+
+    // Hide the notifications container after a delay
+    setTimeout(function() {
+        container.style.display = 'none';
+    }, notificationItems.length * 3000 + 500); // Wait for all items to fade in plus an extra delay
+});
+
+
 
     // Add event listeners to the dropdowns
 document.getElementById('governorateFilter').addEventListener('change', function() {
@@ -539,6 +695,9 @@ function filterClubs() {
         }
     });
 }
+
+
+
 
 </script>
 

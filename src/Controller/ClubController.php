@@ -11,31 +11,79 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use App\Entity\Image;
+use App\Repository\SubscriptionRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\CityService;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use DateTime;
+use App\Entity\Notification; // Don't forget to import the Notification entity
+use App\Repository\NotificationRepository;
 use DateInterval;
+use App\Notification\EmailNotification;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+
 
 
 class ClubController extends AbstractController
 {
     #[Route('/test', name: 'app_club_index1', methods: ['GET'])]
-    public function index1(ClubRepository $clubRepository): Response
+    public function index1(ClubRepository $clubRepository, FlashyNotifier $flashy, MailerInterface $mailer): Response
     {
-        return $this->render('home/index.html.twig', [
+
+        $googleMapsApiKey = getenv('GOOGLE_MAPS_API_KEY');
+
+       
+     //   $flashy->success('Event created!', 'http://your-awesome-link.com');
+       $email = (new Email())
+->from('symfonymail022@gmail.com')
+->to('elyesnart@gmail.com')
+->subject('Time for symfony Mailer')
+->text('Sending emails is fun again')
+->html('<p> see </p>');
+
+$mailer->send($email);
+
+        return $this->render('home/test.html.twig', [
+            'googleMapsApiKey' => $googleMapsApiKey,
         ]);
     }
 
     #[Route('/club', name: 'app_club_index', methods: ['GET'])]
-    public function index(ClubRepository $clubRepository): Response
+    public function index(ClubRepository $clubRepository, EntityManagerInterface $entityManager, FlashyNotifier $flashy, SubscriptionRepository $subscriptionRepository, NotificationRepository $notificationRepository): Response
     {
         // Get all clubs
         $clubs = $clubRepository->findAll();
+        $user = $entityManager->getRepository(User::class)->find(2);
+        $hasSubscription = $subscriptionRepository->findOneBy(['iduser' => $user]) !== null;
+        $subscription = $subscriptionRepository->findOneBy(['iduser' => $user]);
+        $notifications = $notificationRepository->findBy(['iduser' => $user]);
         
+        $maxClubsReached = false;
+        $subscriptionStartDate = null;
+        $subscriptionEndDate = null;
+        if ($hasSubscription) {
+            // You need to implement the logic to calculate maxClubsReached based on the user's subscription
+            // For example, you can fetch the user's subscription details and check if they have reached the limit
+            // Assuming you have a method to get the user's subscription details
+            $userSubscription = $subscriptionRepository->findOneBy(['iduser' => $user]);
+            $maxClubs = $userSubscription->getIdoffer()->getNbrclub(); // Assuming this gets the maximum number of clubs allowed in the subscription offer
+            $numberOfClubs = count($user->getClubs()); // Assuming this gets the number of clubs the user already has
+            $maxClubsReached = $numberOfClubs >= $maxClubs;
+               // Get the subscription start and end dates
+        $subscriptionStartDate = $userSubscription->getStartDate();
+        $subscriptionEndDate = $userSubscription->getEndDate();
+        }
+
+        $hasFreeClub = count($user->getClubs()) > 0;
+
         // Extract unique governorates and cities from clubs
         $governorates = [];
         $cities = [];
@@ -48,15 +96,25 @@ class ClubController extends AbstractController
             }
         }
 
+
+
         return $this->render('club/index.html.twig', [
             'clubs' => $clubs,
             'governorates' => $governorates,
             'cities' => $cities,
+            'hasSubscription' => $hasSubscription, // Pass subscription status to the Twig template
+            'maxClubsReached' => $maxClubsReached, // Pass maxClubsReached to the Twig template
+            'hasFreeClub' =>  $hasFreeClub,
+            'subscriptionStartDate' => $subscriptionStartDate, // Pass subscription start date to the Twig template
+        'subscriptionEndDate' => $subscriptionEndDate, // Pass subscription end date to the Twig template
+        'subscription' => $subscription, // Pass the subscription variable to the Twig template
+        'notifications' => $notifications, // Pass notifications to the Twig template
+
         ]);
     }
 
     #[Route('/club/new', name: 'app_club_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, FlashyNotifier $flashy, MailerInterface $mailer): Response
     {
 
            // Set a flag to indicate new club creation
@@ -85,8 +143,8 @@ class ClubController extends AbstractController
     
         // Set stadiumnbr, longitude, and latitude to 0
         $club->setStadiumnbr(0);
-        $club->setLongitude(0);
-        $club->setLatitude(0);
+       // $club->setLongitude(0);
+        // $club->setLatitude(0);
 
         // Create and handle the form
         $form = $this->createForm(ClubType::class, $club, [
@@ -139,7 +197,42 @@ class ClubController extends AbstractController
             $entityManager->persist($club);
             $entityManager->flush();
 
+             // Create a DateTime object for the current time
+$currentDateTime = new DateTime();
+
+// Format the current time with minutes, seconds, and hours
+$formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
+
+// Create the notification text with the formatted date and club name
+$notificationText = 'New club created: ' . $club->getName() . ' on ' . $formattedDateTime;
+
+// Create a new notification
+$notification = new Notification();
+$notification->setText($notificationText);
+$notification->setIduser($user);
+// Persist and flush the notification entity
+$entityManager->persist($notification);
+$entityManager->flush();
+$flashy->success('A Club got created 1 second ago', 'http://your-awesome-link.com');
+
+$email = (new TemplatedEmail()) // Use TemplatedEmail instead of Email
+    ->from('symfonymail022@gmail.com')
+    ->to($user->getEmail())
+    ->subject('New Club Created!')
+    ->htmlTemplate('emails/emails.html.twig') // Use htmlTemplate method
+    ->context([
+        'club' => $club,
+        'user' => $user,
+    ]);
+
+// Send the email
+$mailer->send($email);
+
+
             return $this->redirectToRoute('app_club_index', [], Response::HTTP_SEE_OTHER);
+            $flashy->success('Event created!', 'http://your-awesome-link.com');
+
+
         }
     
         // Render the new club form
@@ -211,6 +304,8 @@ class ClubController extends AbstractController
                 }
             }
 
+            
+
             $entityManager->flush();
             return $this->redirectToRoute('app_club_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -231,6 +326,24 @@ public function delete(Request $request, Club $club, EntityManagerInterface $ent
         foreach ($club->getIdimage() as $image) {
             $entityManager->remove($image);
         }
+        $user = $entityManager->getRepository(User::class)->find(2);
+
+                     // Create a DateTime object for the current time
+$currentDateTime = new DateTime();
+
+// Format the current time with minutes, seconds, and hours
+$formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
+
+// Create the notification text with the formatted date and club name
+$notificationText = 'Club: ' . $club->getName() . ' Got Deleted on ' . $formattedDateTime;
+
+// Create a new notification
+$notification = new Notification();
+$notification->setText($notificationText);
+$notification->setIduser($user);
+// Persist and flush the notification entity
+$entityManager->persist($notification);
+$entityManager->flush();
 
         // Remove the club itself
         $entityManager->remove($club);
@@ -263,9 +376,6 @@ public function fetchCities(Request $request, CityService $cityService): JsonRes
 
     return $this->json(['cities' => $cities]);
 }
-
-
-
 
 
 }

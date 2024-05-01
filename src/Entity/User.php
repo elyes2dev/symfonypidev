@@ -71,21 +71,23 @@ class User
     #[ORM\OneToMany(mappedBy: 'idplayer', targetEntity: Reservation::class)]
     private Collection $reservations;
 
-    #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Notification::class)]
+    #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Notification::class, cascade: ["remove"])]
     private Collection $notifications;
 
     #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Payment::class)]
     private Collection $payments;
 
-    #[ORM\ManyToMany(targetEntity: Stadium::class, inversedBy: 'iduser')]
+    #[ORM\ManyToMany(targetEntity: Stadium::class, inversedBy: 'iduser', cascade: ["persist","remove"])]
     #[ORM\JoinTable(name:"liked")]
-    #[ORM\JoinColumn(name:"idUser", referencedColumnName:"id")]
-    #[ORM\InverseJoinColumn(name:"refStadium", referencedColumnName:"reference")]
+    #[ORM\JoinColumn(name:"idUser", referencedColumnName:"id", onDelete:"CASCADE")]
+    #[ORM\InverseJoinColumn(name:"refStadium", referencedColumnName:"reference", onDelete:"CASCADE")]
     private Collection $refstadium;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Likedevent::class)]
     private Collection $likedEvents;
 
+    #[ORM\OneToMany(mappedBy: 'iduser', targetEntity: Subscription::class, cascade: ["remove"])]
+    private Collection $subscriptions;
 
     #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'idplayer')]
     #[ORM\JoinTable(name:"participation")]
@@ -552,4 +554,29 @@ class User
 
 
 
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addSubscription(Subscription $subscription): static
+    {
+        if (!$this->subscriptions->contains($subscription)) {
+            $this->subscriptions->add($subscription);
+            $subscription->setIduser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscription(Subscription $subscription): static
+    {
+        $this->subscriptions->removeElement($subscription);
+        // set the owning side to null (unless already changed)
+        if ($subscription->getIduser() === $this) {
+            $subscription->setIduser(null);
+        }
+
+        return $this;
+    }
 }

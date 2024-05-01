@@ -1,102 +1,138 @@
+<div style="display: flex;">
+    <div style="flex: 1;">
+        <!-- Left side of the form -->
+        {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Club Name'}}) }}
+            {% if form_errors(form.name) %}
+                <div class="error-message">
+                    {{ form_errors(form.name) }}
+                </div>
+            {% endif %}
+        </div>
 
+        <div class="form-group">
+            {{ form_label(form.governorate) }}
+            {{ form_widget(form.governorate, {'attr': {'class': 'form-control', 'placeholder': 'Governorate', 'id': 'club_governorate'}}) }}
+            {% if form_errors(form.governorate) %}
+                <div class="error-message">
+                    {{ form_errors(form.governorate) }}
+                </div>
+            {% endif %}
+        </div>
 
-{{ form_start(form) }}
-<div class="form-group">
-    {{ form_label(form.name) }}
-    {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Club Name'}}) }}
-{% if form_errors(form.name) %}
-    <div class="error-message">
-        {{ form_errors(form.name) }}
-    </div>
-{% endif %}
-</div>
+        <div class="form-group">
+            {{ form_label(form.city) }}
+            {{ form_widget(form.city, {'attr': {'class': 'form-control', 'placeholder': 'City', 'id': 'club_city'}}) }}
+            {% if form_errors(form.city) %}
+                <div class="error-message">
+                    {{ form_errors(form.city) }}
+                </div>
+            {% endif %}
+        </div>
 
-<div class="form-group">
-    {{ form_label(form.governorate) }}
-    {{ form_widget(form.governorate, {'attr': {'class': 'form-control', 'placeholder': 'Governorate', 'id': 'club_governorate'}}) }}
-{% if form_errors(form.governorate) %}
-    <div class="error-message">
-        {{ form_errors(form.governorate) }}
-    </div>
-{% endif %}</div>
-
-<div class="form-group">
-    {{ form_label(form.city) }}
-    {{ form_widget(form.city, {'attr': {'class': 'form-control', 'placeholder': 'City', 'id': 'club_city'}}) }}
-{% if form_errors(form.city) %}
-    <div class="error-message">
-        {{ form_errors(form.city) }}
-    </div>
-{% endif %}</div>
-
-
-<div class="row">
-    <div class="form-group col-md-6">
-        {{ form_label(form.starttime) }}
-        {{ form_widget(form.starttime, {'attr': {'class': 'form-control'}}) }}
-{% if form_errors(form.starttime) %}
-    <div class="error-message">
-        {{ form_errors(form.starttime) }}
-    </div>
-{% endif %}    </div>
-    <div class="form-group col-md-6">
-        {{ form_label(form.endtime) }}
-        {{ form_widget(form.endtime, {'attr': {'class': 'form-control'}}) }}
-{% if form_errors(form.endtime) %}
-    <div class="error-message">
-        {{ form_errors(form.endtime) }}
-    </div>
-{% endif %}    </div>
-</div>
-
-<div class="form-group">
-    {{ form_label(form.description) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Description'}}) }}
-    {% if form_errors(form.description) %}
-    <div class="error-message">
-        {{ form_errors(form.description) }}
-    </div>
-{% endif %}
-</div>
-
-{# Display existing images for editing #}
-{% if club.idimage is not empty %}
-    <div class="existing-images">
-        {% for image in club.idimage %}
-            <div class="existing-image" data-image-id="{{ image.id }}">
-                <img src="{{ asset(image.url) }}" alt="{{ image.name }}">
-                <input type="checkbox" name="removed_images[]" value="{{ image.id }}">
-                <label>Remove</label>
+        <div class="row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.starttime) }}
+                {{ form_widget(form.starttime, {'attr': {'class': 'form-control'}}) }}
+                {% if form_errors(form.starttime) %}
+                    <div class="error-message">
+                        {{ form_errors(form.starttime) }}
+                    </div>
+                {% endif %}
             </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
-<div class="form-group" id="image-preview">
-    <!-- Selected image will be displayed here -->
-    {% if form.images.vars.data is not empty %}
-        {% for file in form.images.vars.data %}
-            <div class="existing-image">
-                <img src="{{ asset('Images/' ~ file.filename) }}" alt="Selected Image" style="max-width: 100px;">
-                <input type="checkbox" name="removed_images[]" value="{{ file.filename }}">
-                <label>Remove</label>
+            <div class="form-group col-md-6">
+                {{ form_label(form.endtime) }}
+                {{ form_widget(form.endtime, {'attr': {'class': 'form-control'}}) }}
+                {% if form_errors(form.endtime) %}
+                    <div class="error-message">
+                        {{ form_errors(form.endtime) }}
+                    </div>
+                {% endif %}
             </div>
-        {% endfor %}
-    {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Description'}}) }}
+            {% if form_errors(form.description) %}
+                <div class="error-message">
+                    {{ form_errors(form.description) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Display existing images for editing -->
+        {% if club.idimage is not empty %}
+            <div class="existing-images">
+                {% for image in club.idimage %}
+                    <div class="existing-image" data-image-id="{{ image.id }}">
+                        <img src="{{ asset(image.url) }}" alt="{{ image.name }}">
+                        <input type="checkbox" name="removed_images[]" value="{{ image.id }}">
+                        <label>Remove</label>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-group" id="image-preview">
+            <!-- Selected image will be displayed here -->
+            {% if form.images.vars.data is not empty %}
+                {% for file in form.images.vars.data %}
+                    <div class="existing-image">
+                        <img src="{{ asset('Images/' ~ file.filename) }}" alt="Selected Image" style="max-width: 100px;">
+                        <input type="checkbox" name="removed_images[]" value="{{ file.filename }}">
+                        <label>Remove</label>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.images) }}
+            {{ form_widget(form.images, {'attr': {'class': 'form-control-file', 'onchange': 'previewImage(event)'}}) }}
+            {% if form_errors(form.images) %}
+                <div class="error-message">
+                    {{ form_errors(form.images) }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+<div style="flex: 1; display: flex;">
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div style="flex: 1;">
+            <!-- Map -->
+            <div id="map" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div style="flex: 1;">
+            <!-- Latitude -->
+            <div class="form-group">
+                {{ form_label(form.latitude) }}
+                {{ form_widget(form.latitude, {'attr': {'class': 'form-control','id': 'club_latitude', 'readonly': 'readonly'}}) }}
+                {% if form_errors(form.latitude) %}
+                    <div class="error-message">
+                        {{ form_errors(form.latitude) }}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Longitude -->
+            <div class="form-group">
+                {{ form_label(form.longitude) }}
+                {{ form_widget(form.longitude, {'attr': {'class': 'form-control','id': 'club_longitude', 'readonly': 'readonly'}}) }}
+                {% if form_errors(form.longitude) %}
+                    <div class="error-message">
+                        {{ form_errors(form.longitude) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 
+</div>
 
-
-<div class="form-group">
-    {{ form_label(form.images) }}
-    {{ form_widget(form.images, {'attr': {'class': 'form-control-file', 'onchange': 'previewImage(event)'}}) }}
-{% if form_errors(form.images) %}
-    <div class="error-message">
-        {{ form_errors(form.images) }}
-    </div>
-{% endif %}</div>
-
-
+<!-- CSS -->
 <style>
     .existing-image {
         display: inline-block;
@@ -126,15 +162,16 @@
         height: auto; /* Maintain aspect ratio */
         margin-right: 5px; /* Add some spacing between the image and text */
     }
-    /* CSS to style the error message */
-.error-message {
-    color: #d9534f; /* Red color for error messages */
-    font-size: 14px; /* Adjust the font size */
-    margin-top: 5px; /* Add some space above the error message */
-}
 
+    /* CSS to style the error message */
+    .error-message {
+        color: #d9534f; /* Red color for error messages */
+        font-size: 14px; /* Adjust the font size */
+        margin-top: 5px; /* Add some space above the error message */
+    }
 </style>
 
+<!-- Submit and Return buttons -->
 <button type="submit" class="btn btn-primary btn-submit">
     <img src="{{ asset('Images/ballin.png') }}" alt="Save">
     {{ button_label|default('Save') }}
@@ -144,6 +181,7 @@
     Return
     <img src="{{ asset('Images/return.png') }}" alt="Back to list">
 </button>
+
 
 <script>
   function previewImage(event) {
@@ -293,4 +331,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
+<script>
+    var map;
+    var marker;
+
+   function initMap() {
+    // Initialize the map
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 36.9034, lng: 10.1874},
+        zoom: 14
+    });
+
+    // Get the latitude and longitude values from the hidden inputs
+    var latitudeInput = document.getElementById('club_latitude');
+    var longitudeInput = document.getElementById('club_longitude');
+    var latLng = {
+        lat: parseFloat(latitudeInput.value),
+        lng: parseFloat(longitudeInput.value)
+    };
+
+    // Add marker at the club's location
+    marker = new google.maps.Marker({
+        position: latLng,
+        map: map
+    });
+
+    // Set the map center to the club's location
+    map.setCenter(latLng);
+
+    // Add click event listener to the map
+    google.maps.event.addListener(map, 'click', function(event) {
+        // Get the latitude and longitude of the clicked location
+        var clickedLocation = event.latLng;
+
+        // Clear previous marker
+        if (marker) {
+            marker.setMap(null);
+        }
+
+        // Add marker at the clicked location
+        marker = new google.maps.Marker({
+            position: clickedLocation,
+            map: map
+        });
+
+        // Set latitude and longitude inputs to clicked location values
+        latitudeInput.value = clickedLocation.lat();
+        longitudeInput.value = clickedLocation.lng();
+    });
+}
+
+</script>
+
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgClXCMDHYkdbbt_7lWCLNVYKhivPdCiM&callback=initMap" async defer></script>
 {{ form_end(form) }}

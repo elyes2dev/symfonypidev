@@ -134,6 +134,14 @@ class ClubType extends AbstractType
                     // Apply the constraint based on whether it's an edit form or not
                     $options['is_edit_form'] ? new NotBlank() : new AtLeastOneImage(),
                 ],
+            ])
+            ->add('latitude', TextType::class, [
+                'label' => 'Latitude',
+                'required' => false,
+            ])
+            ->add('longitude', TextType::class, [
+                'label' => 'Longitude',
+                'required' => false,
             ]);
             
 

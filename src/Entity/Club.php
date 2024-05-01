@@ -56,9 +56,11 @@ class Club
     private ?string $description=null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'longitude cannot be blank')]
     private ?float $longitude;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'latitude cannot be blank')]
     private ?float $latitude;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clubs')]

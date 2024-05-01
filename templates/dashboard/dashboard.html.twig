@@ -6,9 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+
 
     <style>
+         /* Override default Flashy CSS to position notifications in the lower right corner */
+        .flashy {
+            bottom: 20px; /* Adjust the distance from the bottom as needed */
+            right: 20px; /* Adjust the distance from the right as needed */
+            z-index: 1000; /* Ensure it's above other elements */
+        }
+
           #intro-animation {
             position: fixed;
             top: 50%;
@@ -502,8 +510,13 @@
 </head>
 <body>
     <!-- Introductory animation -->
-
-
+   <!-- Flashy depends on jQuery -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Load Flashy default JavaScript -->
+    <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+    <!-- Include Flashy default partial -->
+    {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+    
     <header style="display: none;">
         <div class="logo">
             <img src="{{ asset('Images/Ball.png') }}">
@@ -556,7 +569,7 @@
 
     <div class="content" style="display: none;">
         {% block content %}
-        
+
         {% endblock %}
     </div>
 

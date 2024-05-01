@@ -15,20 +15,50 @@ use App\Repository\ClubRepository;
 use App\Entity\Image;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Service\EmailService;
+use App\Service\TwilioService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 
 
 
 #[Route('/stadium')]
 class StadiumController extends AbstractController
 {
-    #[Route('/', name: 'app_stadium_index', methods: ['GET'])]
-    public function index(StadiumRepository $stadiumRepository): Response
+    private $emailService;
+    private $twilioService;
+
+    public function __construct( TwilioService $twilioService)
     {
-        return $this->render('stadium/index.html.twig', [
-            'stadia' => $stadiumRepository->findAll(),
-        ]);
+        $this->twilioService = $twilioService;
     }
 
+
+    #[Route('/', name: 'app_stadium_index', methods: ['GET'])]
+    public function index(StadiumRepository $stadiumRepository, FlashyNotifier $flashy): Response
+    {
+        $stadia = $stadiumRepository->findAll();
+    
+        // Check if any stadium has maintenance equal to 3
+        $maintenanceAlert = false;
+        foreach ($stadia as $stadium) {
+            if ($stadium->getMaintenance() == 3) {
+                $maintenanceAlert = true;
+                break;
+            }
+        }
+        $flashy->success('A Club got created 1 second ago', 'http://your-awesome-link.com');
+
+        // Show flash notifier if maintenance alert is true
+        if ($maintenanceAlert) {
+            $flashy->success('A Club got created 1 second ago', 'http://your-awesome-link.com');
+        }
+    
+        return $this->render('stadium/index.html.twig', [
+            'stadia' => $stadia,
+        ]);
+    }
+    
     #[Route('/{id}/stadiums', name: 'app_club_stadiums', methods: ['GET'])]
 public function showStadiums(Club $club, StadiumRepository $stadiumRepository): Response
 {
@@ -112,6 +142,17 @@ public function new(Request $request, EntityManagerInterface $entityManager, Clu
 
         $entityManager->persist($stadium);
         $entityManager->flush();
+
+    
+
+          // Replace the recipient's phone number with the actual number
+        $recipientPhoneNumber = '+21621148869';
+        $message = "New Stadium Created:\nName: {Width: {$stadium->getWidth()}\nHeight: {$stadium->getHeight()}\nPrice: {$stadium->getPrice()}\nCreated Date: " . date('Y-m-d H:i:s');
+
+        $this->twilioService->sendSMS($recipientPhoneNumber, $message);
+
+
+
 
         return $this->redirectToRoute('app_club_stadiums', ['id' => $clubId], Response::HTTP_SEE_OTHER);
     }
@@ -220,6 +261,26 @@ public function edit(Request $request, Stadium $stadium, EntityManagerInterface 
         return $this->redirectToRoute('app_club_stadiums', ['id' => $club->getId()], Response::HTTP_SEE_OTHER);
     }
     
+    #[Route('/stadium/{reference}/alert-maintenance', name: 'alert_maintenance', methods: ['POST'])]
+    public function alertMaintenance(Request $request, Stadium $stadium)
+    {
+        // Check if the stadium's maintenance status is 3 and it's not verified
+        if ($stadium->getMaintenance() == 3) {
+            // Update the maintenance status to 0
+            $stadium->setMaintenance(0);
+
+            // Persist changes to the database
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($stadium);
+            $entityManager->flush();
+
+            // Return a success JSON response
+            return new JsonResponse(['message' => 'Maintenance alerted successfully.'], JsonResponse::HTTP_OK);
+        }
+
+        // Return a failure JSON response
+        return new JsonResponse(['message' => 'Unable to alert maintenance.'], JsonResponse::HTTP_BAD_REQUEST);
+    }
 
     
 }

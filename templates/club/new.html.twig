@@ -4,6 +4,14 @@
 {% block content %}
 
 {% block title %}
+        <!-- Flashy depends on jQuery -->
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <!-- Load Flashy default JavaScript -->
+        <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+        <!-- Include Flashy default partial -->
+        {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+        <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+        
     <div class="container">
         <div class="vertical-line"></div>
         <div class="text-container">
@@ -14,6 +22,19 @@
     <br>
     <br>
  <style>
+   /* Override default Flashy CSS to position notifications in the center of the page */
+            .flashy {
+                position: fixed;
+                top: 30%;
+                left: 93%;
+                transform: translate(-50%, -100%);
+                z-index: 1000; /* Ensure it's above other elements */
+                width: 150px; /* Set the width of the notification */
+                height: 70px;
+                padding: 10px; /* Adjust padding as needed */
+                font-size: 14px; /* Adjust font size as needed */
+                border-radius: 5px; /* Add border radius for rounded corners */
+            }
     .container {
             display: flex;
             align-items: center;

@@ -56,7 +56,7 @@ class Stadium
     #[ORM\InverseJoinColumn(name:"idImage", referencedColumnName:"id")]
     private Collection $idimage;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'refstadium')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'refstadium',cascade: ["persist","remove"] )]
     private Collection $iduser;
 
       // Transient property to handle file uploads in the form
