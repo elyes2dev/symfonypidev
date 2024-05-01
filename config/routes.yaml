@@ -2,4 +2,70 @@ index:
     path: /
     controller: App\Controller\DashboardController::index
 
+    #  Tri id asc
+product_display_sorted_by_id_asc:
+    path: '/tri/sorted_by_id_asc'
+    controller: App\Controller\ProductController::displaySortedByIdASC
 
+#  Tri type asc
+product_display_sorted_by_type_asc:
+    path: '/tri/sorted_by_type_asc'
+    controller: App\Controller\ProductController::displaySortedByTypeASC
+
+#  Tri name asc
+product_display_sorted_by_name_asc:
+    path: '/tri/sorted_by_name_asc'
+    controller: App\Controller\ProductController::displaySortedByNameASC
+
+#  Tri reference asc
+product_display_sorted_by_reference_asc:
+    path: '/tri/sorted_by_reference_asc'
+    controller: App\Controller\ProductController::displaySortedByReferenceASC
+
+#  Tri price asc
+product_display_sorted_by_price_asc:
+    path: '/tri/sorted_by_price_asc'
+    controller: App\Controller\ProductController::displaySortedByPriceASC
+
+
+   #  Tri id asc
+product_display_sorted_by_id_desc:
+    path: '/tri/sorted_by_id_desc'
+    controller: App\Controller\ProductController::displaySortedByIdDESC
+
+#  Tri type asc
+product_display_sorted_by_type_desc:
+    path: '/tri/sorted_by_type_desc'
+    controller: App\Controller\ProductController::displaySortedByTypeDESC
+
+#  Tri name asc
+product_display_sorted_by_name_desc:
+    path: '/tri/sorted_by_name_desc'
+    controller: App\Controller\ProductController::displaySortedByNameDESC
+
+#  Tri reference asc
+product_display_sorted_by_reference_desc:
+    path: '/tri/sorted_by_reference_desc'
+    controller: App\Controller\ProductController::displaySortedByReferenceDESC
+
+#  Tri price asc
+product_display_sorted_by_price_desc:
+    path: '/tri/sorted_by_price_desc'
+    controller: App\Controller\ProductController::displaySortedByPriceDESC
+
+
+add_to_cart:
+    path: /add_to_cart
+    controller: App\Controller\ShopController::addToCart
+    methods: [POST]
+
+#app_payment_cart_new:
+ #   path: '/new'
+  #  controller: App\Controller\PaymentCartController::new
+
+    app_payment_cart_new:
+    path: /cart/payment_cart/new
+    controller: App\Controller\PaymentCartController::new
+    methods: [GET, POST]
+
+    

@@ -18,10 +18,7 @@ class Product
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Regex(
-        pattern: "/^[a-zA-Z0-9]+$/",
-        message: "Reference must contain only letters and numbers"
-    )]
+    
     private ?string $reference;
 
     #[ORM\Column(length: 255)]
@@ -42,7 +39,7 @@ class Product
     #[ORM\Column(name:"quantityStock")]
     #[Assert\NotBlank]
     #[Assert\Positive]
-    #[Assert\LessThanOrEqual(value: 40, message: "The quantity must be less than or equal to 40.")]
+    //#[Assert\LessThanOrEqual(value: 40, message: "The quantity must be less than or equal to 40.")]
     private ?int $quantitystock;
     
 
@@ -173,58 +170,6 @@ class Product
     //     return $this;
     // }
 
-    /**
-     * @return Collection<int, Image>
-     */
-    public function getIdimage(): Collection
-    {
-        return $this->idimage;
-    }
-
-    public function addIdimage(Image $idimage): static
-    {
-        if (!$this->idimage->contains($idimage)) {
-            $this->idimage->add($idimage);
-        }
-
-        return $this;
-    }
-
-    public function removeIdimage(Image $idimage): static
-    {
-        $this->idimage->removeElement($idimage);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Composed>
-     */
-    public function getComposed(): Collection
-    {
-        return $this->composed;
-    }
-
-    public function addComposed(Composed $composed): static
-    {
-        if (!$this->composed->contains($composed)) {
-            $this->composed->add($composed);
-            $composed->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComposed(Composed $composed): static
-    {
-        if ($this->composed->removeElement($composed)) {
-            // set the owning side to null (unless already changed)
-            if ($composed->getProduct() === $this) {
-                $composed->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
 }

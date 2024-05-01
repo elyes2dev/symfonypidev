@@ -1,0 +1,58 @@
+
+
+{% block title %}PaymentCart index{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+  <link rel="icon" type="image/x-icon" href="{{ asset('Images/Ball.ico') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchMate</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('styles4.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+</head>
+<body>
+{% block body %}
+
+    <h1>PaymentCart index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>CardNum</th>
+                <th>ExpirationDate</th>
+                <th>Cvv</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payment_cart in payment_carts %}
+            <tr>
+                <td>{{ payment_cart.id }}</td>
+                <td>{{ payment_cart.name }}</td>
+                <td>{{ payment_cart.cardNum }}</td>
+                <td>{{ payment_cart.expirationDate ? payment_cart.expirationDate|date('Y-m-d') : '' }}</td>
+                <td>{{ payment_cart.cvv }}</td>
+                <td>
+                    <a href="{{ path('app_payment_cart_show', {'id': payment_cart.id}) }}">show</a>
+                    <a href="{{ path('app_payment_cart_edit', {'id': payment_cart.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payment_cart_new') }}">Create new</a>
+{% endblock %}
+</body>
+</html>

@@ -5,12 +5,35 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
+
 
 
     <style>
+
+
+
+    /* Custom CSS for select bar */
+        .custom-select-bar {
+            width: 100%; /* Set the width of the select bar */
+            padding: .375rem .75rem; /* Set padding */
+            font-size: 1rem; /* Set font size */
+            line-height: 1.5; /* Set line height */
+            color: #495057; /* Set text color */
+            background-color: #fff; /* Set background color */
+            background-image: none; /* Remove background image */
+            border: 1px solid #ced4da; /* Set border */
+            border-radius: .25rem; /* Set border radius */
+            appearance: none; /* Remove default appearance */
+        }
           #intro-animation {
             position: fixed;
             top: 50%;
@@ -557,10 +580,10 @@
             <img src="{{ asset('Images/Ball.png') }}">
             <h1><span class="green">M</span>atch<span class="green">M</span>ate</h1>
         </div>
-        <div class="search-field">
-            <input type="text" placeholder="Search...">
-            <i class="fas fa-search"></i>
-        </div>
+        <div>
+                      <label for="search-input">Search a product : </label>
+                      <input type="text" id="search" placeholder="Search by name">
+                    </div>
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
     </header>
 
@@ -595,6 +618,7 @@
             <a href="#"><i class="fas fa-door-open"></i> Logout</a>
         </ul>
     </div>
+
     <!-- **************************************Middle content***************************  -->
 
     <div class="content" style="display: none;">
@@ -602,9 +626,35 @@
         <div class="container">
         <h1 class="text-center">Product List</h1>
 
+        
+
+  <div class="input-group">
+  <div class="col-md-6">
+    <select id="tri" onchange="sortProducts()" class="custom-select-bar">
+      <option value="">SORT PRODUCTS BY ...</option>
+      <option value="{{ path('product_display_sorted_by_id_asc') }}">Identifiant >> <i class="fa fa-sort-numeric-up"></i></option>
+      <option value="{{ path('product_display_sorted_by_id_desc') }}">Identifiant << <i class="fas fa-sort-numeric-down"></i></option>
+
+      <option value="{{ path('product_display_sorted_by_reference_asc') }}">Reference >> <i class="fas fa-sort-alpha-up"></i></option>
+      <option value="{{ path('product_display_sorted_by_reference_desc') }}">Reference << <i class="fas fa-sort-alpha-down"></i></option>
+
+      <option value="{{ path('product_display_sorted_by_name_asc') }}">Name >> <i class="fas fa-sort-alpha-up"></i></option>
+      <option value="{{ path('product_display_sorted_by_name_desc') }}">Name << <i class="fas fa-sort-alpha-down"></i></option>
+
+      <option value="{{ path('product_display_sorted_by_type_asc') }}">Type >> <i class="fas fa-sort-alpha-up"></i></option>
+      <option value="{{ path('product_display_sorted_by_type_desc') }}">Type << <i class="fas fa-sort-alpha-down"></i></option>
+
+      <option value="{{ path('product_display_sorted_by_price_asc') }}">Price >> <i class="fas fa-sort-amount-up"></i></option>
+      <option value="{{ path('product_display_sorted_by_price_desc') }}">Price << <i class="fas fa-sort-amount-down"></i></option>
+    </select>
+  </div>
+</div>
+
+  <br><br>
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
-                <thead class="thead-dark">
+                <thead id="results" class="thead-dark">
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">Reference</th>
@@ -662,6 +712,8 @@
 
         </div>
     </div>
+
+   
         
   
         
@@ -699,6 +751,37 @@
             }, index * 100); // Adjust delay between letters (in milliseconds)
         });
     </script>
+
+    <script>
+function sortProducts() {
+  var select = document.getElementById("tri");
+  var selectedOption = select.options[select.selectedIndex];
+  window.location.href = selectedOption.value;
+}
+
+</script>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search').keyup(function() {
+            var query = $(this).val();
+            $.ajax({
+                url: "{{ path('app_product_search') }}",
+                type: "POST",
+                data: {query: query},
+                success: function(data) {
+                    $('#results').html(data);
+                    $('#results').css('width', '100%');
+                    $('#results').css('position', 'static');
+                }
+            });
+        });
+    });
+</script>
+        
 </body>
 </html>
 {% endblock %}

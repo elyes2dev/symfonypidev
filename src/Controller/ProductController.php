@@ -14,6 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\File;
+use MercurySeries\FlashyBundle\FlashyNotifier;
+use Joli\JoliNotif\Notification;
+use Joli\JoliNotif\NotifierFactory;
+
+
 
 #[Route('/product')]
 class ProductController extends AbstractController
@@ -21,17 +26,23 @@ class ProductController extends AbstractController
     #[Route('/', name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
+        
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
+           
+
         ]);
     }
 
+    
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,FlashyNotifier $flashy): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
+        $flashy->success('Event created!', 'http://your-awesome-link.com');
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Gérer l'upload de l'image
@@ -59,6 +70,7 @@ class ProductController extends AbstractController
             // Enregistrer l'entité dans la base de données
             $entityManager->persist($product);
             $entityManager->flush();
+            $this->sendNotification();
     
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -110,5 +122,22 @@ class ProductController extends AbstractController
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    private function sendNotification(): void
+{
+    // Create a notifier
+    $notifier = NotifierFactory::create();
+
+    // Create a notification
+    $notification = (new Notification())
+        ->setTitle('Matchmate: Succes !')
+        ->setBody('The product has been added successfully');
+        //->setIcon(__DIR__/Images/appstore.png);
+
+    // Send the notification
+    $notifier->send($notification);
+}
+
+    
     
 }

@@ -9,6 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+    <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+    <script src="//code.jquery.com/jquery.js"></script>
+    
 
     <style>
           #intro-animation {
@@ -638,6 +642,8 @@
             }, index * 100); // Adjust delay between letters (in milliseconds)
         });
     </script>
+
+    {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
 </body>
 </html>
 {% endblock %}

@@ -1,0 +1,57 @@
+
+{% block body %}
+<div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead id="results" class="thead-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Quantity in Stock</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.reference }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>${{ product.price }}</td>
+                            <td>{{ product.type }}</td>
+                            <td>{{ product.quantitystock }}</td>
+                                <td>
+                                    {% if product.image %}
+                                        <img src="{{ asset('uploads/images/' ~ product.image) }}" alt="Image Product {{ product.name }}" style="max-width: 100px; max-height: 100px;">
+                                    {% else %}
+                                        Pas d'image associée
+                                    {% endif %}
+                                </td>
+                            <td>
+                                <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-info btn-sm mr-1">Show</a>
+                                <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-primary btn-sm mr-1">Edit</a>
+                                
+                                <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                    <button type="submit" class="btn btn-danger mt-1 " aria-label="Delete">
+                                        <i class="fas fa-trash-alt"></i> <!-- Font Awesome delete icon -->
+                                    </button>
+                                </form>
+
+                            </td>
+
+                           
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center">No records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+{% endblock %}

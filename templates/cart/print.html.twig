@@ -1,0 +1,34 @@
+{% block content %}
+    <div class="container">
+        <h1 class="my-4">Products List</h1>
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Reference</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Price Total</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cart in carts %}
+                            <tr>
+                                <td>{{ cart.getidproduct.name }}</td>
+                                <td>{{ cart.getidproduct.reference }}</td>
+                                <td>{{ cart.getidproduct.price }}</td>
+                                <td>{{ cart.quantity }}</td>
+                                <td>{{ cart.size }}</td>
+                                <td>{{ cart.priceTotal }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

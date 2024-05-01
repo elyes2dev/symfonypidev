@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\CartRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Product; // Import the Product entity class
 
 #[ORM\Entity(repositoryClass:CartRepository::class)]
 class Cart
@@ -16,147 +19,86 @@ class Cart
     #[ORM\Column]
     private ?int $id;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $size;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $quantity;
+    
+
     #[ORM\Column(name:"priceTotal")]
     #[Assert\Positive]
-    private ?float $pricetotal;
+    private ?float $priceTotal;
 
-    
-    #[ORM\ManyToOne(targetEntity: User::class,inversedBy:'carts')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
     #[ORM\JoinColumn(name:"idUser", referencedColumnName: "id")]
-    private ?User $iduser;
+    private ?User $idUser;
 
-    //#[ORM\OneToMany(targetEntity: Product::class,inversedBy:'carts')]
-    //#[ORM\JoinColumn(name:"idProduct", referencedColumnName: "id")]
-    //private ?Product $idproduct;
-
-    
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: Composed::class)]
-    private Collection $composed;
-
-    #[ORM\OneToMany(mappedBy: 'idcart', targetEntity: Cart::class)]
-    private Collection $orders;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        // $this->idproduct = new ArrayCollection();
-        $this->orders = new ArrayCollection();
-        $this->composed = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'carts')]
+    #[ORM\JoinColumn(name: "idProduct", referencedColumnName: "id")]
+    private ?Product $idProduct;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPricetotal(): ?float
+    public function getPriceTotal(): ?float
     {
-        return $this->pricetotal;
+        return $this->priceTotal;
     }
 
-    public function setPricetotal(float $pricetotal): static
+    public function setPriceTotal(float $priceTotal): self
     {
-        $this->pricetotal = $pricetotal;
-
+        $this->priceTotal = $priceTotal;
         return $this;
     }
 
-    public function getIduser(): ?User
+    public function getIdUser(): ?User
     {
-        return $this->iduser;
+        return $this->idUser;
     }
 
-    public function setIduser(?User $iduser): static
+    public function setIdUser(?User $idUser): self
     {
-        $this->iduser = $iduser;
-
+        $this->idUser = $idUser;
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Product>
-    //  */
-    // public function getIdproduct(): Collection
-    // {
-    //     return $this->idproduct;
-    // }
-
-    // public function addIdproduct(Product $idproduct): static
-    // {
-    //     if (!$this->idproduct->contains($idproduct)) {
-    //         $this->idproduct->add($idproduct);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeIdproduct(Product $idproduct): static
-    // {
-    //     $this->idproduct->removeElement($idproduct);
-
-    //     return $this;
-    // }
-
-    /**
-     * @return Collection<int, Cart>
-     */
-    public function getOrders(): Collection
+    public function getIdProduct(): ?Product
     {
-        return $this->orders;
+        return $this->idProduct;
     }
 
-    public function addOrder(Order $order): static
+    public function setIdProduct(?Product $idProduct): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setIdcart($this);
-        }
-
+        $this->idProduct = $idProduct;
         return $this;
     }
 
-    public function removeOrder(Order $order): static
+    public function getSize(): ?string
     {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getIdcart() === $this) {
-                $order->setIdcart(null);
-            }
-        }
+        return $this->size;
+    }
 
+    public function setSize(?string $size): self
+    {
+        $this->size = $size;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Composed>
-     */
-    public function getComposed(): Collection
+    public function getQuantity(): ?int
     {
-        return $this->composed;
+        return $this->quantity;
     }
 
-    public function addComposed(Composed $composed): static
+    public function setQuantity(?int $quantity): self
     {
-        if (!$this->composed->contains($composed)) {
-            $this->composed->add($composed);
-            $composed->setCart($this);
-        }
-
+        $this->quantity = $quantity;
         return $this;
     }
 
-    public function removeComposed(Composed $composed): static
-    {
-        if ($this->composed->removeElement($composed)) {
-            // set the owning side to null (unless already changed)
-            if ($composed->getCart() === $this) {
-                $composed->setCart(null);
-            }
-        }
-
-        return $this;
-    }
 
 }
