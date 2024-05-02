@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\File;
-use MercurySeries\FlashyBundle\FlashyNotifier;
 use Joli\JoliNotif\Notification;
 use Joli\JoliNotif\NotifierFactory;
 
@@ -36,13 +35,12 @@ class ProductController extends AbstractController
 
     
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,FlashyNotifier $flashy): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-        $flashy->success('Event created!', 'http://your-awesome-link.com');
-
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Gérer l'upload de l'image
@@ -103,6 +101,7 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
