@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Services\QrcodeService;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -15,6 +18,62 @@ use TCPDF;
 
 class QrCodeController extends AbstractController
 {
+
+
+    private $entityManager;
+
+    #[Route('/payment/{id}', name: 'payment')]
+    public function payment(Request $request, int $id): Response
+    {
+        // Retrieve the panier entity based on the id
+        $event = $this->entityManager->getRepository(Event::class)->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException('Panier not found');
+        }
+
+
+        // Set your Stripe API key
+        Stripe::setApiKey('sk_test_51Ovrmh08QtU0D1sdk6RQOQgjTXrmyUHCPk7DebzM4OYACK2CD3Ghc0BO9QyvPWr6lQvZfVSEaVE0k4ljHlwgpgCF00OgB4llLk');
+
+        try {
+            // Create a PaymentIntent with the amount (in cents) and currency
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $event->getPrice()* 100, // Convert salary to cents
+                'currency' => 'usd', // Change to your currency code if different
+            ]);
+
+            // Redirect to the payment success route
+            return $this->redirectToRoute('payment_success', ['paymentIntentId' => $paymentIntent->id]);
+        } catch (\Exception $e) {
+            // Handle payment failure if necessary
+            // Render an error page or return a response with an appropriate message
+            $errorMessage = $e->getMessage();
+            return $this->render('payment/error.html.twig', ['errorMessage' => $errorMessage]);
+        }
+    }
+
+    #[Route('payment/success/{paymentIntentId}', name: 'payment_success')]
+    public function paymentSuccess(string $paymentIntentId): Response
+    {
+        // Handle successful payment
+        // You can retrieve payment details using $paymentIntentId
+        // Render a success page or perform any other actions
+        return $this->render('payment/success.html.twig', ['paymentIntentId' => $paymentIntentId]);
+    }
+
+    #[Route('payment/cancel', name: 'payment_cancel')]
+    public function paymentCancel(): Response
+    {
+        // Handle cancelled payment
+        // Render a cancellation page or perform any other actions
+        return $this->render('payment/cancel.html.twig');
+    }
+
+
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/qrcode/{eventId}', name: 'generate_qrcode')]
     public function generateQRCode(Request $request, $eventId, QrcodeService $qrcodeService, MailerInterface $mailer, UrlGeneratorInterface $urlGenerator): Response
     {

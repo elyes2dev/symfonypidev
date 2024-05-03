@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 class ShowEventController extends AbstractController
 {
-    private $eventRepository;
+    private EventRepository $eventRepository;
 
     public function __construct(EventRepository $eventRepository)
     {

@@ -4,20 +4,16 @@
 {% block content %}
 
 {% block title %}
-   <div class="content">
+    <div class="content">
         <div style="position: absolute; top: 92px; left: 218px">
             <h1 style="display: inline-block;">All Events</h1>
             <form method="GET" action="{{ path('ShowEvent') }}" id="search-form">
                 <label for="search">Search by Name, Price, or Number of Participants:</label>
                 <input type="text" id="search" name="search" value="{{ searchTerm }}">
 
-
                 <label for="date">Date:</label>
                 <input type="date" id="date"  value="{{ date }}">
-
-                <button type="submit">Search</button>
             </form>
-
 
         </div>
       <div class="bloc" style="width:100%;">
@@ -330,33 +326,34 @@
             }
         // Add event listener for input fields to submit the form when their values change
         document.addEventListener('DOMContentLoaded', function() {
-            // Add event listener for form submission
-            document.getElementById('search-form').addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
+            const searchInput = document.getElementById('search');
+            const contentArea = document.querySelector('.content .bloc');
 
-                // Get form data
-                const formData = new FormData(this);
+            // Function to fetch search results
+            function fetchSearchResults() {
+                // Get the current value of the search field
+                const searchTerm = searchInput.value.trim();
 
-                // Send form data via AJAX
-                fetch(this.action, {
+                // Fetch search results via AJAX
+                fetch(`/ShowEvent?search=${searchTerm}`, {
                     method: 'GET',
-                    body: formData
                 })
                     .then(response => response.text())
                     .then(data => {
                         // Update the content area with the new search results
-                        document.querySelector('.content').innerHTML = data;
+                        contentArea.innerHTML = data;
                     })
                     .catch(error => {
                         console.error('Error:', error);
                     });
-            });
+            }
 
-            // Log a message when the page is fully loaded
-            console.log('Page loaded!');
+            // Add event listener for input on the search field
+            searchInput.addEventListener('input', fetchSearchResults);
+
+            // Initial search when the page loads
+            fetchSearchResults();
         });
-
-
 
 
     </script>

@@ -10,7 +10,7 @@ class StripeService
 {
     private $privatekey;
 
-    public function __constructor()
+    public function __constructor(): void
     {
 
         $this->privatekey = $_ENV['STRIPE_SECRET_KEY'];
@@ -33,7 +33,10 @@ class StripeService
     }
 
 
-    public function paiement ($amount, $currency, $description,array $stripeParameter)
+    /**
+     * @throws ApiErrorException
+     */
+    public function paiement ($amount, $currency, $description, array $stripeParameter): ?\Stripe\PaymentIntent
     {
 
         \Stripe\Stripe::setApiKey($this->privatekey);
@@ -58,7 +61,11 @@ class StripeService
         }
         return $payment_intent;
     }
-    public function stripe(array $stripeParameter,Event $event)
+
+    /**
+     * @throws ApiErrorException
+     */
+    public function stripe(array $stripeParameter, Event $event): ?\Stripe\PaymentIntent
     {
         return  $this->paiement(
             $event->getPrice()*100,

@@ -42,6 +42,15 @@ like_event:
     controller: 'App\Controller\HomeController::likeEventAction'
     methods: ['POST']
 
+join_event:
+    path: /event/{id}/join
+    controller: 'App\Controller\HomeController::joinEventAction'
+    methods: ['POST']
+
+filter_events:
+    path: /filter_events
+    controller: App\Controller\HomeController::filterEvents
+
 submit_event_form:
     path: /submit-event-form
     controller: App\Controller\AddEventController::index

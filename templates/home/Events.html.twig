@@ -21,6 +21,8 @@
                   <!-- Hidden input field to hold the selected value from the dropdown -->
                   <input type="hidden" id="filterValue" name="filterValue">
               </form>
+              <label for="eventNameFilter">Filter by Event Name:</label>
+              <input type="text" id="eventNameFilter" onkeyup="filterEventsByName()">
 
 
               {% if events is empty %}
@@ -39,11 +41,16 @@
                                       <p>Number of Participants: {{ event.nbrparticipants }}</p>
                                       <p>Price: {{ event.price }}DT</p>
                                       <div class="btn-group">
-                                          <button class="like-btn btn" onclick="likeEvent({{ event.id }})"><i class="far fa-heart"></i> Like</button>
+                                          <p>Likes: {{ likedEventCounts[event.id] }}</p>
+                                          <!-- "Like" button -->
+                                          <a href="app_home" onclick="likeEventOnClick(event, {{ event.id }})" class="like-btn btn">
+                                              <i class="far fa-heart"></i> Like
+                                          </a>
+                                          <p>joins: {{ joinEventCounts[event.id] }}</p>
                                           <!-- Add the join event button -->
-                                          <button class="join-btn btn" onclick="joinEvent()"><i class="fas fa-plus"></i> Join Event</button>
-                                          <a href="{{ path('Qr_Code', {'eventId': event.id}) }}" class="btn-link show-tasks-btn">Show Tasks</a>
-                                          <img class="qr-code-img" src="" alt="QR Code" style="display: none;">
+                                          <a href="app_home" onclick="joinEventOnClick(event, {{ event.id }})" class="join-btn btn">
+                                              <i class="as fa-plus"></i> Join
+                                          </a>
 
                                       </div>
                                   </div>
@@ -293,34 +300,74 @@
         header.style.opacity = "1"; // Show the header after creating spans
     });
 
-    function likeEvent(eventId) {
-        // Ask for confirmation
-        const confirmation = confirm("Are you sure you want to like this event?");
+    function joinEventOnClick(event, eventId) {
+    // Prevent the default behavior of the link
+    event.preventDefault();
 
-        if (!confirmation) {
-            return; // If user cancels, do nothing
-        }
+    // Ask for confirmation
+    const confirmation = confirm("Are you sure you want to join this event? The Payment will be automatically done ");
 
-        fetch('/event/' + eventId + '/like', {
-            method: 'POST',
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json(); // Parse the JSON response
-            } else {
-                throw new Error('Failed to like event');
-            }
-        })
-        .then(data => {
-            // Handle the JSON response data
-            console.log(data.message); // Log the success message
-            // You can update the UI or show a message to the user here
-        })
-        .catch(error => {
-            console.error('Error:', error.message); // Log any errors
-            // You can handle errors here, such as displaying an error message to the user
-        });
+    if (!confirmation) {
+        return; // If user cancels, do nothing
     }
+
+    fetch('/event/' + eventId + '/join', {
+        method: 'POST',
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Parse the JSON response
+        } else {
+            throw new Error('Failed to join event');
+        }
+    })
+    .then(data => {
+        // Handle the JSON response data
+        console.log(data.message); // Log the success message
+        // You can update the UI or show a message to the user here
+
+        // If you want to redirect the user after liking the event
+        window.location.reload(); // Reload the page
+    })
+    .catch(error => {
+        console.error('Error:', error.message); // Log any errors
+        // You can handle errors here, such as displaying an error message to the user
+    });
+}
+ function likeEventOnClick(event, eventId) {
+    // Prevent the default behavior of the link
+    event.preventDefault();
+
+    // Ask for confirmation
+    const confirmation = confirm("Are you sure you want to like this event?");
+
+    if (!confirmation) {
+        return; // If user cancels, do nothing
+    }
+
+    fetch('/event/' + eventId + '/like', {
+        method: 'POST',
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Parse the JSON response
+        } else {
+            throw new Error('Failed to like event');
+        }
+    })
+    .then(data => {
+        // Handle the JSON response data
+        console.log(data.message); // Log the success message
+        // You can update the UI or show a message to the user here
+
+        // If you want to redirect the user after liking the event
+        window.location.reload(); // Reload the page
+    })
+    .catch(error => {
+        console.error('Error:', error.message); // Log any errors
+        // You can handle errors here, such as displaying an error message to the user
+    });
+}
 
     // Add onchange event listener to the dropdown
 document.getElementById('filterDropdown').addEventListener('change', function() {
@@ -332,6 +379,68 @@ document.getElementById('filterDropdown').addEventListener('change', function() 
         document.getElementById('filterForm').submit();
     }
 });
+
+function filterEventsByName() {
+    var filterValue = document.getElementById("eventNameFilter").value; // Get the filter value from the input field
+
+    var xhttp = new XMLHttpRequest(); // Create a new XMLHttpRequest object
+
+    xhttp.onreadystatechange = function() { // Define an event handler for the state change
+        if (this.readyState === 4 && this.status === 200) { // Check if the request is complete and successful
+            var responseData = JSON.parse(this.responseText); // Parse the JSON response
+
+            var cardContainer = document.querySelector(".card-container"); // Get the card container element
+
+            cardContainer.innerHTML = ''; // Clear the card container
+
+            responseData.events.forEach(function(event) { // Iterate over the events in the response data
+                var cardDiv = document.createElement('div'); // Create a new div element for the card
+                cardDiv.className = 'card'; // Set the class name for the card
+
+                // Set background image style if image URL is available
+                if (event.image) {
+                    cardDiv.style.backgroundImage = 'url(' + event.image + ')';
+                    cardDiv.style.backgroundSize = 'cover';
+                }
+
+                // Create HTML for the card content using template literals
+                var cardContent = `
+                    <div class="card-content">
+                        <h3>${event.name}</h3>
+                        <p>Start Date: ${event.startDate}</p>
+                        <p>End Date: ${event.endDate}</p>
+                        <p>Start Time: ${event.startTime}</p>
+                        <p>End Time: ${event.endTime}</p>
+                        <p>Number of Participants: ${ event.nbrparticipants }</p>
+                        <p>Price: ${ event.price }DT</p>
+
+                        <div class="btn-group">
+                            <p>Likes: ${event.likedCount}</p>
+                            <a href="app_home" onclick="likeEventOnClick(event, ${event.id})" class="like-btn btn">
+                                <i class="far fa-heart"></i> Like
+                            </a>
+                            <p>Joins: ${event.joinCount}</p>
+                            <a href="app_home" onclick="joinEventOnClick(event, ${event.id})" class="join-btn btn">
+                                <i class="as fa-plus"></i> Join
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                cardDiv.innerHTML = cardContent; // Set the HTML content of the card
+
+                cardContainer.appendChild(cardDiv); // Append the card to the card container
+            });
+        }
+    };
+
+    // Send the AJAX request to the server with the filter value
+    xhttp.open("GET", "/filter_events?name=" + filterValue, true);
+    xhttp.send(); // Send the request
+}
+
+
+
 
 </script>
 {% endblock %}

@@ -5,6 +5,10 @@ namespace App\Repository;
 
 use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -62,6 +66,21 @@ class EventRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countLikedEventsByUserId(int $userId): int
+    {
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT COUNT(le.idUser) FROM App\Entity\LikedEvent le WHERE le.idUser = :userId'
+        );
+        $query->setParameter('userId', $userId);
+
+        return $query->getSingleScalarResult();
+    }
+
+
     public function findAllOrderedByField(string $orderByField): array
     {
         $qb = $this->createQueryBuilder('e');
@@ -86,6 +105,30 @@ class EventRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @throws Exception
+     */
+    public function insertIntoParticipationTable(EntityManagerInterface $entityManager, $idPlayerValue, $idEventValue): void
+    {
+        $connection = $entityManager->getConnection();
+        $sql = "INSERT INTO participation (IdPlayer, IdEvent) VALUES (:idPlayer, :idEvent)";
+        $statement = $connection->prepare($sql);
+
+        // Bind values to parameters
+        $statement->bindValue('idPlayer', $idPlayerValue);
+        $statement->bindValue('idEvent', $idEventValue);
+
+        // Execute the query
+        $statement->execute();
+    }
+    public function filterByName($name)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.name LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->getQuery()
+            ->getResult();
+    }
 
     // You can add custom repository methods here
 }
