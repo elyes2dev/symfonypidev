@@ -50,18 +50,6 @@ public function searchByName(string $query): array
         ->getResult();
 }
 
- /**
-     * Count the number of clubs per governorate.
-     *
-     * @return array
-     */
-    public function countClubsPerGovernorate(): array
-    {
-        return $this->createQueryBuilder('c')
-            ->select('c.governorate, COUNT(c.id) as clubCount')
-            ->groupBy('c.governorate')
-            ->getQuery()
-            ->getResult();
-    }
+
 
 }
