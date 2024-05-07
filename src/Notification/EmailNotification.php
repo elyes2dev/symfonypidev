@@ -19,3 +19,4 @@ class EmailNotification extends Notification
     }
 }
 
+
