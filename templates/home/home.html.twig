@@ -4,17 +4,36 @@
     <style>
     /* Add custom styles for sticky navbar */
     .navbar {
-      position: fixed;
-      width: 96%;
-      top: 0;
-      z-index: 1000;
-      transition: top 0.3s;
+    position: fixed;
+    width: 100%;
+    height: 80px; /* Adjust the height as needed */
+    top: 0;
+    z-index: 1000;
+    transition: top 0.3s;
+    background-color: #ffffff; /* Add background color as needed */
+    border-bottom: 1px solid #cccccc; /* Add border as needed */
     }
 
-    .navbar-scroll {
-      top: -100px; /* Adjust this value as needed */
+    .navbar-logo {
+      height: 100%; /* Make the logo fill the entire height of the navbar */
     }
 
+    .navbar-logo img {
+      height: 100%; /* Make the logo fill the entire height of the navbar */
+      width: auto; /* Maintain aspect ratio */
+    }
+
+    .navbar-items {
+      height: 100%; /* Make the navbar items fill the entire height of the navbar */
+      display: flex;
+      align-items: center; /* Center items vertically */
+      justify-content: flex-end; /* Align items to the right */
+      padding-right: 20px; /* Add some padding to the right */
+    }
+
+    .navbar-items li {
+      margin-left: 20px; /* Add space between navbar items */
+    }
     /* Add custom styles for responsive navbar */
     @media (max-width: 768px) {
       .navbar-items {
@@ -63,11 +82,11 @@
     </div>
     <ul class="navbar-items">
       <li ><a href="/home">Home</a></li>
-      <li><a href="/calendar">Reservation</a></li>
-        <li><a href="/stade">Stadium</a></li>
-        <li><a href="/feedback/new">Feedback</a></li>
+      <li><a href="/calendar">Booking  Calendar</a></li>
+        <li><a href="/stade">Stadiums</a></li>
+        <li><a href="/feedback/new">Give a Feedback</a></li>
       <li><a href="#">Events</a></li>
-      <li><a href="#">Claim</a></li>
+      <li><a href="#">Claims</a></li>
     </ul>
     <div class="navbar-icons">
         <img src="{{ asset('Images/panier.png') }}" alt="panier">

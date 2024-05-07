@@ -12,7 +12,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text">
-                            <img src="Images/player.png" class="label-image">
+                            <img src="{{ asset('Images/player.png') }}" class="label-image">
                             <strong>Player:</strong> {{ reservation.idplayer.firstname }} {{ reservation.idplayer.lastname }}</p>
 
                             <p class="card-text">
@@ -49,31 +49,19 @@
                             {% endif %}
 
                             <!-- Show Cancel and Pay buttons if reservation is assigned -->
-                            {# {% if reservation.type == "Assigned" %}
+                            {% if reservation.type == "assigned" %}
                                 <a href="{{ path('cancel_reservation', { 'id': reservation.id }) }}" class="btn btn-warning" style="background-color: red;">Cancel</a>
-                                {% if reservation.type == "Pending" %}
-                                    <form action="/checkout" method="POST" class="d-inline">
-                                        <input type="hidden" name="reservationId" value="{{ reservation.id }}">
-                                        <button type="submit" class="btn btn-primary" style="background-color: green;">Pay</button>
-                                    </form>
-                                {% endif %}
-                            {% endif %} #}
-                            {% if reservation.type == "Pending" %}
-                                <form action="{{ path('checkout') }}" method="POST" class="d-inline">
+                                <form action="/checkout" method="POST" class="d-inline">
                                     <input type="hidden" name="reservationId" value="{{ reservation.id }}">
                                     <button type="submit" class="btn btn-primary" style="background-color: green;">Pay</button>
                                 </form>
-                                <a href="{{ path('cancel_reservation', { 'id': reservation.id }) }}" class="btn btn-warning" style="background-color: red;">Cancel</a>
-                            {% elseif reservation.type == "Assigned" %}
-                                <a href="{{ path('cancel_reservation', { 'id': reservation.id }) }}" class="btn btn-warning" style="background-color: red;">Cancel</a>
                             {% endif %}
-
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
                 {# <p>No reservations found for this date.</p> #}
-                <p class="no-reservations-message"><strong>No reservations found for this date.</strong></p>
+                <p class="no-reservations-message">No reservations found for this date.</p>
             {% endif %}
         </div>
     </div>

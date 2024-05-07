@@ -79,6 +79,35 @@ class ReservationController extends AbstractController
             $timeSlots[] = $startTime->format('h:i A') . ' - ' . $slotEndTime->format('h:i A');
             $startTime->add($interval);
         }
+
+    //     $timeSlots = [];
+    // while ($startTime < $endTime) {
+    //     $slotEndTime = (clone $startTime)->add(new DateInterval('PT' . $matchDuration . 'M'));
+
+    //     // Check if the slot is reserved for the selected stadium and date
+    //     $isReserved = false;
+    //     foreach ($reservations as $reservation) {
+    //         if ($reservation->getStadium()->getId() == $stadiumId &&
+    //             $reservation->getReservationDate()->format('Y-m-d') === $date) {
+    //             $reservationStartTime = $reservation->getStartTime();
+    //             $reservationEndTime = (clone $reservationStartTime)->add(new DateInterval('PT' . $matchDuration . 'M'));
+    //             if ($startTime >= $reservationStartTime && $slotEndTime <= $reservationEndTime) {
+    //                 $isReserved = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+
+    //     // If the slot is not reserved, add it to the time slots array
+    //     if (!$isReserved) {
+    //         $timeSlots[] = $startTime->format('h:i A') . ' - ' . $slotEndTime->format('h:i A');
+    //     }
+
+    //     $startTime->add($interval);
+    // }
+
+
+
         // Render a template to display the time slots
         return $this->render('reservation/time_slots.html.twig', [
             'timeSlots' => $timeSlots,
@@ -146,7 +175,19 @@ class ReservationController extends AbstractController
     }
 
 
-    #[Route('/scheduele/{stadiumId}', name: 'app_reservation_schedule', methods: ['GET'])]
+    #[Route('/reservation/statistics', name: 'reservation_statistics')]
+    public function reservationStatistics(ReservationRepository $reservationRepository): Response
+    {
+        $reservationStatistics = $reservationRepository->getMonthlyReservationStatistics();
+        
+        // Render the chart template with the reservation statistics data
+        return $this->render('reservation/chart.html.twig', [
+            'reservationStatistics' => $reservationStatistics,
+        ]);
+    }
+
+
+#[Route('/scheduele/{stadiumId}', name: 'app_reservation_schedule', methods: ['GET'])]
     public function schedule(string $stadiumId, EntityManagerInterface $entityManager, ReservationRepository $reservationRepository): Response
     {
     $currentDate = new \DateTime();
@@ -191,32 +232,56 @@ class ReservationController extends AbstractController
     ]);
     }
 
-    private function getWeekDates(DateTimeInterface $start): array
+private function getWeekDates(DateTimeInterface $start): array
+{
+    $weekDates = [];
+    $startOfWeek = (new DateTimeImmutable($start->format('Y-m-d')))->setISODate((int)$start->format('Y'), (int)$start->format('W'), 1);
+    $weekDates[] = $startOfWeek->format('l d/m/Y');
+    for ($i = 1; $i < 7; $i++) {
+        $weekDates[] = $startOfWeek->modify("+{$i} day")->format('l d/m/Y');
+    }
+    return $weekDates;
+}
+
+
+    #[Route('/schedule', name: 'app_reservation_test', methods: ['GET'])]
+    public function test(ReservationRepository $reservationRepository): Response
     {
-        $weekDates = [];
-        $startOfWeek = (new DateTimeImmutable($start->format('Y-m-d')))->setISODate((int)$start->format('Y'), (int)$start->format('W'), 1);
-        $weekDates[] = $startOfWeek->format('l d/m/Y');
-        for ($i = 1; $i < 7; $i++) {
-            $weekDates[] = $startOfWeek->modify("+{$i} day")->format('l d/m/Y');
-        }
-        return $weekDates;
+    // Fetch reservations
+    $reservations = $reservationRepository->findAll();
+
+    // Assuming you have a function to generate the schedule data, replace it with your logic
+    $scheduleData = $this->generateSchedule($reservations);
+
+
+    return $this->render('reservation/schedule.html.twig', [
+        'scheduleData' => $scheduleData, // Pass schedule data to the template
+    ]);
     }
 
-    #[Route('/reservation/statistics', name: 'reservation_statistics')]
-    public function reservationStatistics(ReservationRepository $reservationRepository): Response
-    {
-        $reservationStatistics = $reservationRepository->getMonthlyReservationStatistics();
-        
-        // Render the chart template with the reservation statistics data
-        return $this->render('reservation/chart.html.twig', [
-            'reservationStatistics' => $reservationStatistics,
-        ]);
-    }
+// Function to generate schedule data
+private function generateSchedule($reservations) {
+    // Your logic to generate the schedule data here
+    // For example:
+    $days = [
+        [
+            'name' => 'Sunday',
+            'slots' => [
+                ['reservation' => null], // Example slot without reservation
+                ['reservation' => $reservations[0]], // Example slot with reservation
+                // Add more slots as needed
+            ]
+        ],
+        // Add data for other days
+    ];
 
+    return $days;
+}
 
     #[Route('/calendar', name: 'calendar', methods: ['GET'])]
     public function calendar(Request $request ,ReservationRepository $reservationRepository,ClubRepository $clubRepository): Response
     {
+
         // Fetch the list of clubs
     $clubs = $clubRepository->findAll();
 
@@ -265,80 +330,6 @@ class ReservationController extends AbstractController
         'reservations' => $reservations
     ]);
     }
-    /*****************************************************************  Booking method that works  ************************************************/
-    // #[Route('/reservation/{stadiumId}', name: 'app_reservation_new', methods: ['POST'])]
-    // public function new(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger, $stadiumId): Response
-    // {
-    //     // Fetching data from POST request
-    //     $selectedDate = $request->request->get('selectedDate');
-    //     $selectedStartTime = $request->request->get('starttime');
-    //     $selectedEndTime = $request->request->get('endtime');
-
-    //     // Log the received input
-    //     $logger->info('Received selectedDate: '.$selectedDate);
-    //     $logger->info('Received startTime: '.$selectedStartTime);
-    //     $logger->info('Received endTime: '.$selectedEndTime);
-
-    //     // Convert string dates to DateTime objects and handle potential errors
-    //     try {
-    //         $date = new \DateTimeImmutable($selectedDate);
-    //         $startTime = new \DateTime($selectedStartTime);
-    //         $endTime = new \DateTime($selectedEndTime);
-    //     } catch (\Exception $e) {
-    //         $logger->error('Error parsing date or time: '.$e->getMessage());
-    //         // Redirect to an error page or return an error response
-    //         return $this->redirectToRoute('error_page', ['message' => 'Invalid date or time format']);
-    //     }
-
-    //     // Check if the time slot is already booked
-    //     $existingReservation = $entityManager->getRepository(Reservation::class)->findOneBy([
-    //         'refstadium' => $stadiumId,  // Make sure 'refstadium' is correctly mapped and used
-    //         'date' => $date,
-    //         'starttime' => $startTime,
-    //         'endtime' => $endTime
-    //     ]);
-
-    //     if ($existingReservation) {
-    //         $logger->error('Time slot is already booked');
-    //         //$this->addFlash('error', 'This time slot is already booked.');
-    //         return new JsonResponse(['error' => 'This time slot is already booked'], 400); // 400 Bad Request
-    //         //return $this->redirectToRoute('book', ['stadiumId' => $stadiumId]);
-    //     }
-
-    //     // Retrieve the user (assuming the user is authenticated)
-    //     $user = $entityManager->getRepository(User::class)->find(1); // Get user with ID 1
-    //     if (!$user) {
-    //         $logger->error('User not found');
-    //         throw $this->createNotFoundException('User not found');
-    //     }
-
-    //     $stadium = $entityManager->getRepository(Stadium::class)->find($stadiumId);
-    //     // Check if the stadium exists
-    //     if (!$stadium) {
-    //         $logger->error('Stadium not found');
-    //         throw $this->createNotFoundException('Stadium not found');
-    //     }
-
-    //     // Create a new reservation instance
-    //     $reservation = new Reservation();
-    //     $reservation->setDate($date);
-    //     $reservation->setStartTime($startTime);
-    //     $reservation->setEndTime($endTime);
-    //     $reservation->setType('Pending');
-    //     $reservation->setRefstadium($stadium);
-    //     $reservation->setIdplayer($user);
-
-        
-    //     $stadium->getMaintenance()->setMaintenance($stadium->getMaintenance()+1);
-
-    //     // Persist the reservation entity
-    //     $entityManager->persist($reservation);
-    //     $entityManager->persist($stadium);
-    //     $entityManager->flush();
-
-    //     // Redirect to the calendar page or any other page as needed
-    //     return $this->redirectToRoute('calendar');
-    // }
 
     #[Route('/reservation/{stadiumId}', name: 'app_reservation_new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger, $stadiumId): Response
@@ -398,7 +389,7 @@ class ReservationController extends AbstractController
         $reservation->setDate($date);
         $reservation->setStartTime($startTime);
         $reservation->setEndTime($endTime);
-        $reservation->setType('Pending');
+        $reservation->setType('assigned'); // Set the type
         $reservation->setRefstadium($stadium);
         $reservation->setIdplayer($user);
 
@@ -446,6 +437,27 @@ class ReservationController extends AbstractController
         $this->addFlash('success', 'Reservation deleted successfully.');
 
         return $this->redirectToRoute('calendar');
+    }
+
+
+
+
+    #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ReservationType::class, $reservation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('reservation/edit.html.twig', [
+            'reservation' => $reservation,
+            'form' => $form,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
