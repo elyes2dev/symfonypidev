@@ -32,17 +32,14 @@
 
    
 2. Install dependencies:
-
-composer install
+   ```bash
+   composer install
 
 2.Configure your .env file for your database and mail settings.
 Run migrations:
-php bin/console doctrine:migrations:migrate
+   ```bash 
+   php bin/console doctrine:migrations:migrate
 
-3. Start the Symfony server:
-symfony server:start
-
-JavaFX and FlutterFlow code can be found in their respective folders with instructions.
 
 
 
